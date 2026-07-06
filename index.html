@@ -1,1 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orion Burger · Misiones de Sabor</title>
+  <meta name="description" content="Orion Burger — Smash burgers galácticas en 3D real. Carne premium, pan de papa, batidos y salsas de otra galaxia." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='48' r='30' fill='%23ff8a2e'/%3E%3Cellipse cx='50' cy='54' rx='46' ry='15' fill='none' stroke='%23b14bff' stroke-width='5' transform='rotate(-22 50 54)'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --void-0: #05060f; --void-1: #0a0a1f; --void-2: #12132e;
+      --nebula: #7b3ff2; --nebula-2: #b14bff;
+      --plasma: #ff7a1a; --plasma-2: #ffb02e; --gold: #ffcf5c;
+      --star: #eaf0ff; --ice: #9fb4ff;
+      --glass: rgba(159,180,255,0.06); --glass-brd: rgba(159,180,255,0.16);
+      --font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--star); background: var(--void-0); overflow-x: hidden; min-height: 100vh; }
 
+    /* ---------- COSMIC BACKGROUND ---------- */
+    #space { position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(1000px 700px at 78% 8%, rgba(123,63,242,0.35), transparent 60%),
+        radial-gradient(900px 800px at 12% 92%, rgba(255,122,26,0.22), transparent 55%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(177,75,255,0.10), transparent 70%),
+        linear-gradient(180deg, var(--void-0), var(--void-1) 40%, var(--void-2)); }
+    #stars { position: fixed; inset: 0; z-index: 0; display: block; }
+
+    /* ---------- LOGO ---------- */
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--star); }
+    .logo svg { width: 44px; height: 44px; filter: drop-shadow(0 0 14px rgba(177,75,255,0.6)); }
+    .logo .wm { display: flex; flex-direction: column; line-height: 1; }
+    .logo .wm b { font-weight: 900; font-size: 1.25rem; letter-spacing: 3px; }
+    .logo .wm small { font-size: 0.62rem; letter-spacing: 5px; opacity: 0.7; margin-top: 3px; }
+
+    /* ---------- NAV ---------- */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px clamp(20px, 5vw, 64px); backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(5,6,15,0.85), rgba(5,6,15,0)); transition: background 0.3s; }
+    nav ul { list-style: none; display: flex; gap: 30px; align-items: center; }
+    nav a { color: var(--star); text-decoration: none; font-weight: 600; font-size: 0.95rem; opacity: 0.82; transition: 0.2s; }
+    nav a:hover { opacity: 1; color: var(--plasma-2); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; font-weight: 800; letter-spacing: 0.5px;
+      color: #0a0a1f; background: linear-gradient(135deg, var(--plasma-2), var(--plasma));
+      padding: 12px 26px; border-radius: 999px; font-size: 0.95rem;
+      box-shadow: 0 8px 26px rgba(255,122,26,0.45); transition: transform 0.2s, box-shadow 0.2s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(255,122,26,0.6); }
+    .btn.ghost { background: transparent; color: var(--star); border: 1.5px solid var(--glass-brd); box-shadow: none; }
+    .btn.ghost:hover { border-color: var(--nebula-2); color: var(--nebula-2); }
+    .nav-toggle { display: none; background: none; border: none; color: var(--star); font-size: 1.6rem; cursor: pointer; }
+
+    /* ---------- HERO ---------- */
+    .hero { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 40px;
+      max-width: 1280px; margin: 0 auto; padding: 140px clamp(20px, 5vw, 64px) 40px; min-height: 100vh; }
+    .eyebrow { color: var(--plasma-2); font-weight: 800; letter-spacing: 4px; text-transform: uppercase; font-size: 0.8rem; }
+    .hero-copy h1 { font-size: clamp(2.9rem, 6.5vw, 5.6rem); line-height: 0.92; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-top: 14px; }
+    .hero-copy h1 .glow { background: linear-gradient(120deg, var(--plasma-2), var(--nebula-2)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 26px rgba(177,75,255,0.55)); }
+    .hero-copy p.lead { margin: 22px 0 34px; font-size: 1.15rem; max-width: 470px; opacity: 0.82; line-height: 1.55; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+    .badges { display: flex; gap: 30px; margin-top: 42px; flex-wrap: wrap; }
+    .badge b { font-size: 1.7rem; color: var(--plasma-2); display: block; }
+    .badge span { font-size: 0.8rem; opacity: 0.65; letter-spacing: 0.5px; }
+
+    /* ---------- 3D STAGE ---------- */
+    .stage { position: relative; height: 560px; display: grid; place-items: center; }
+    .stage .halo { position: absolute; width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(177,75,255,0.35), rgba(255,122,26,0.08) 55%, transparent 72%);
+      filter: blur(12px); animation: haloPulse 6s ease-in-out infinite; z-index: 0; }
+    @keyframes haloPulse { 0%,100%{ transform: scale(1); opacity: 0.85;} 50%{ transform: scale(1.12); opacity: 1;} }
+    .stage canvas { position: relative; z-index: 1; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+    .stage canvas:active { cursor: grabbing; }
+    .scroll-hint { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); z-index: 4; text-align: center; opacity: 0.7; font-size: 0.78rem; letter-spacing: 2px; animation: floatHint 2.4s ease-in-out infinite; }
+    @keyframes floatHint { 0%,100%{ transform: translate(-50%,0);} 50%{ transform: translate(-50%,8px);} }
+
+    /* ---------- SECTION SHELL ---------- */
+    section.block { position: relative; z-index: 2; max-width: 1220px; margin: 0 auto; padding: 90px clamp(20px, 5vw, 64px); }
+    .section-head { text-align: center; margin-bottom: 12px; }
+    .section-title { font-size: clamp(2.1rem, 5vw, 3.4rem); font-weight: 900; margin: 10px 0 14px; line-height: 1.02; text-transform: uppercase; }
+    .section-title .glow { background: linear-gradient(120deg, var(--plasma-2), var(--nebula-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .section-sub { opacity: 0.72; max-width: 600px; margin: 0 auto; line-height: 1.55; }
+
+    /* ---------- MENU ---------- */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 54px; }
+    .card { position: relative; background: linear-gradient(160deg, var(--glass), rgba(123,63,242,0.05));
+      border: 1px solid var(--glass-brd); border-radius: 22px; padding: 30px 26px 26px; backdrop-filter: blur(8px); overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(40px); }
+    .card.in { opacity: 1; transform: translateY(0); }
+    .card:hover { transform: translateY(-8px); border-color: rgba(177,75,255,0.55); box-shadow: 0 24px 50px rgba(0,0,0,0.5), 0 0 40px rgba(123,63,242,0.2); }
+    .planet-badge { width: 58px; height: 58px; }
+    .card h3 { margin: 14px 0 4px; font-size: 1.45rem; letter-spacing: 0.5px; }
+    .card .mission { color: var(--plasma-2); font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+    .card .desc { opacity: 0.8; font-size: 0.95rem; line-height: 1.45; margin: 12px 0 14px; }
+    .card .ingredients { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .card .ingredients li { font-size: 0.78rem; padding: 5px 11px; border-radius: 999px; background: rgba(159,180,255,0.08); border: 1px solid rgba(159,180,255,0.14); opacity: 0.9; }
+    .card .foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--glass-brd); padding-top: 16px; }
+    .card .price { font-weight: 900; color: var(--plasma-2); font-size: 1.35rem; }
+    .card .level { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; background: rgba(177,75,255,0.15); color: var(--nebula-2); border: 1px solid rgba(177,75,255,0.3); }
+
+    /* ---------- SHAKES ---------- */
+    .shake-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 54px; }
+    .shake { position: relative; text-align: center; background: linear-gradient(180deg, rgba(159,180,255,0.05), rgba(123,63,242,0.05));
+      border: 1px solid var(--glass-brd); border-radius: 24px; padding: 20px 24px 30px; overflow: hidden; transition: transform 0.3s, border-color 0.3s; }
+    .shake:hover { transform: translateY(-8px); border-color: rgba(177,75,255,0.5); }
+    .shake canvas { width: 100%; height: 300px; display: block; cursor: grab; touch-action: pan-y; }
+    .shake canvas:active { cursor: grabbing; }
+    .shake h3 { font-size: 1.4rem; margin-top: 4px; }
+    .shake .flavor { color: var(--plasma-2); font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+    .shake p { opacity: 0.78; font-size: 0.92rem; line-height: 1.45; margin-top: 10px; }
+
+    /* ---------- BOOSTER SAUCES ---------- */
+    .booster-wrap { margin-top: 46px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+    .sauce { display: flex; gap: 16px; align-items: center; background: var(--glass); border: 1px solid var(--glass-brd);
+      border-radius: 18px; padding: 20px; transition: transform 0.25s, border-color 0.25s; }
+    .sauce:hover { transform: translateY(-5px); border-color: rgba(255,122,26,0.5); }
+    .sauce svg { width: 52px; height: 52px; flex: none; }
+    .sauce h4 { font-size: 1.05rem; }
+    .sauce span { opacity: 0.7; font-size: 0.85rem; }
+    .booster-note { text-align: center; margin-top: 24px; opacity: 0.7; font-size: 0.9rem; }
+
+    /* ---------- FEATURES ---------- */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 30px; margin-top: 50px; }
+    .feature { text-align: center; }
+    .feature .fico { width: 76px; height: 76px; margin: 0 auto 16px; border-radius: 22px; display: grid; place-items: center;
+      background: linear-gradient(135deg, rgba(123,63,242,0.35), rgba(255,122,26,0.35)); border: 1px solid var(--glass-brd);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.4); animation: pulse 4s ease-in-out infinite; }
+    .feature .fico svg { width: 34px; height: 34px; }
+    @keyframes pulse { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-8px);} }
+    .feature h4 { margin-bottom: 8px; font-size: 1.1rem; }
+    .feature p { opacity: 0.72; font-size: 0.9rem; line-height: 1.45; }
+
+    /* ---------- CTA ---------- */
+    .cta { position: relative; z-index: 2; max-width: 1100px; margin: 30px auto 90px; text-align: center; padding: 76px 30px; border-radius: 32px; overflow: hidden;
+      background: radial-gradient(700px 340px at 50% 0%, rgba(177,75,255,0.35), transparent 70%), linear-gradient(160deg, rgba(255,122,26,0.16), rgba(10,10,31,0.4)); border: 1px solid var(--glass-brd); }
+    .cta h2 { font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 900; text-transform: uppercase; line-height: 1; }
+    .cta p { opacity: 0.82; margin: 18px auto 30px; max-width: 480px; }
+    .cta .btn { font-size: 1.05rem; padding: 16px 42px; }
+
+    /* ---------- FOOTER ---------- */
+    footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px 60px; opacity: 0.7; font-size: 0.85rem; }
+    footer .social { display: flex; gap: 18px; justify-content: center; margin-bottom: 18px; }
+    footer .social a { color: var(--ice); transition: 0.2s; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--glass-brd); }
+    footer .social a:hover { color: var(--plasma-2); transform: translateY(-3px); border-color: rgba(255,122,26,0.5); }
+    footer .social svg { width: 20px; height: 20px; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding-top: 120px; }
+      .hero-copy p.lead { margin-left: auto; margin-right: auto; }
+      .hero-actions, .badges { justify-content: center; }
+      .stage { order: -1; height: 400px; }
+      nav ul { display: none; }
+      .nav-toggle { display: block; }
+      nav.open ul { display: flex; flex-direction: column; position: absolute; top: 66px; right: 20px; background: rgba(10,10,31,0.97); padding: 20px 26px; border-radius: 16px; gap: 18px; border: 1px solid var(--glass-brd); }
+    }
+    @media (prefers-reduced-motion: reduce) { .halo, .fico, .scroll-hint { animation: none !important; } }
+  </style>
+</head>
+<body>
+  <div id="space"></div>
+  <canvas id="stars"></canvas>
+
+  <!-- LOGO SVG DEFINITION (reused) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="orion-mark" viewBox="0 0 100 100">
+        <defs>
+          <radialGradient id="planetG" cx="38%" cy="32%" r="75%">
+            <stop offset="0%" stop-color="#ffce6b"/><stop offset="45%" stop-color="#ff8a2e"/>
+            <stop offset="100%" stop-color="#7b3ff2"/>
+          </radialGradient>
+          <linearGradient id="ringG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#b14bff"/><stop offset="100%" stop-color="#ffb02e"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="50" cy="52" rx="46" ry="16" fill="none" stroke="url(#ringG)" stroke-width="3.5" transform="rotate(-22 50 52)" opacity="0.9"/>
+        <circle cx="50" cy="47" r="26" fill="url(#planetG)"/>
+        <!-- burger silhouette inside planet -->
+        <g transform="translate(50 47)">
+          <path d="M-15 -6 Q0 -20 15 -6 Z" fill="#ffdca0"/>
+          <rect x="-15" y="-6" width="30" height="4" rx="2" fill="#6bbf4a"/>
+          <rect x="-15" y="-2" width="30" height="5" rx="2.5" fill="#4a2c17"/>
+          <path d="M-15 3 Q0 13 15 3 Z" fill="#d9973f"/>
+          <circle cx="-6" cy="-12" r="1" fill="#fff2d6"/><circle cx="2" cy="-13" r="1" fill="#fff2d6"/><circle cx="8" cy="-10" r="1" fill="#fff2d6"/>
+        </g>
+        <ellipse cx="50" cy="52" rx="46" ry="16" fill="none" stroke="url(#ringG)" stroke-width="3.5" transform="rotate(-22 50 52)" stroke-dasharray="60 200" opacity="0.9"/>
+        <circle cx="18" cy="20" r="1.6" fill="#eaf0ff"/><circle cx="82" cy="30" r="1.3" fill="#eaf0ff"/><circle cx="78" cy="78" r="1.5" fill="#eaf0ff"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header>
+    <a class="logo" href="#top">
+      <svg><use href="#orion-mark"/></svg>
+      <span class="wm"><b>ORION</b><small>BURGER</small></span>
+    </a>
+    <nav id="nav">
+      <ul>
+        <li><a href="#menu">Hamburguesas</a></li>
+        <li><a href="#batidos">Batidos</a></li>
+        <li><a href="#booster">The Booster</a></li>
+        <li><a href="#pedir" class="btn">Pedir ahora</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">☰</button>
+  </header>
+
+  <!-- HERO -->
+  <main class="hero" id="top">
+    <div class="hero-copy">
+      <span class="eyebrow">Orion Burger · Misiones de Sabor</span>
+      <h1>Despega hacia<br><span class="glow">otra galaxia</span><br>de sabor</h1>
+      <p class="lead">Carne premium prensada al fierro, pan de papa artesanal y salsa secreta. Seis misiones, tres batidos y salsas de otro planeta. Todo en Orion Burger.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn">Explorar el menú</a>
+        <a href="#batidos" class="btn ghost">Ver batidos</a>
+      </div>
+      <div class="badges">
+        <div class="badge"><b>6</b><span>MISIONES</span></div>
+        <div class="badge"><b>100%</b><span>CARNE PREMIUM</span></div>
+        <div class="badge"><b>15'</b><span>ENTREGA ORBITAL</span></div>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="halo"></div>
+      <canvas id="c-hero" data-scene="burger" data-interactive="1"></canvas>
+    </div>
+    <div class="scroll-hint">DESPLÁZATE Y ARRASTRA EL 3D ↓</div>
+  </main>
+
+  <!-- MENU -->
+  <section class="block" id="menu">
+    <div class="section-head">
+      <span class="eyebrow">Menú Orion</span>
+      <h2 class="section-title">Misiones de <span class="glow">Sabor</span></h2>
+      <p class="section-sub">Cada hamburguesa es una misión. Elige tu destino y prepárate para el despegue.</p>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <!-- SHAKES -->
+  <section class="block" id="batidos">
+    <div class="section-head">
+      <span class="eyebrow">Trilogía de Batidos</span>
+      <h2 class="section-title">Batidos <span class="glow">de la galaxia</span></h2>
+      <p class="section-sub">Cremosos, naturales y en 3D real. Arrástralos para girarlos.</p>
+    </div>
+    <div class="shake-grid" id="shakeGrid"></div>
+  </section>
+
+  <!-- BOOSTER -->
+  <section class="block" id="booster">
+    <div class="section-head">
+      <span class="eyebrow">The Booster</span>
+      <h2 class="section-title">El aderezo <span class="glow">extra</span></h2>
+      <p class="section-sub">Potencia tu misión con nuestro set de salsas por un pequeño costo adicional.</p>
+    </div>
+    <div class="booster-wrap" id="boosterWrap"></div>
+    <p class="booster-note">✦ Set completo de las 3 salsas disponible al agregar cualquier misión.</p>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="block" id="origen">
+    <div class="section-head">
+      <span class="eyebrow">La misión Orion</span>
+      <h2 class="section-title">Sabor de <span class="glow">otro mundo</span></h2>
+    </div>
+    <div class="features" id="features"></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="pedir">
+    <span class="eyebrow">Tu misión te espera</span>
+    <h2>Inicia el<br>despegue</h2>
+    <p>Pide en línea o recoge en tienda. Av. de las Estrellas 123 · abierto todos los días de 12 a 23 h.</p>
+    <a href="#" class="btn" id="orderBtn">Lanzar mi pedido</a>
+  </section>
+
+  <footer>
+    <div class="social" id="social"></div>
+    <p>© 2026 Orion Burger · Misiones de Sabor · Hecho con carne, fuego y estrellas</p>
+  </footer>
+
+  <!-- ================= DATA + ICON TEMPLATES ================= -->
+  <script>
+    /* ---- crafted SVG icons (no emojis) ---- */
+    const SVG = {
+      planet: (n, c1, c2) => `<svg class="planet-badge" viewBox="0 0 60 60">
+        <defs><radialGradient id="pg${n}" cx="38%" cy="32%" r="75%">
+        <stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></radialGradient></defs>
+        <ellipse cx="30" cy="33" rx="27" ry="9" fill="none" stroke="#b14bff" stroke-width="2.4" transform="rotate(-20 30 33)" opacity="0.85"/>
+        <circle cx="30" cy="28" r="16" fill="url(#pg${n})"/>
+        <text x="30" y="33" text-anchor="middle" font-size="14" font-weight="900" fill="#0a0a1f">${n}</text>
+        <ellipse cx="30" cy="33" rx="27" ry="9" fill="none" stroke="#ffb02e" stroke-width="2.4" transform="rotate(-20 30 33)" stroke-dasharray="34 120" opacity="0.9"/>
+      </svg>`,
+      flame: `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2c2 4-2 5-1 8 .5 1.5 3 1 3-1 2 2 3 4 3 7a7 7 0 11-14 0c0-4 3-6 4-9 .8-2.4 3-3 5-5z" fill="#ff7a1a" stroke="#ffb02e" stroke-width="1.2"/></svg>`,
+      bun: `<svg viewBox="0 0 24 24" fill="none"><path d="M3 11a9 6 0 0118 0z" fill="#ffb02e"/><rect x="3" y="11" width="18" height="4" rx="2" fill="#d9973f"/><path d="M3 15h18a4 4 0 01-4 3H7a4 4 0 01-4-3z" fill="#a5601f"/><circle cx="9" cy="8" r="0.7" fill="#fff"/><circle cx="13" cy="7" r="0.7" fill="#fff"/></svg>`,
+      flask: `<svg viewBox="0 0 24 24" fill="none"><path d="M9 3v6l-5 9a2 2 0 002 3h12a2 2 0 002-3l-5-9V3" stroke="#b14bff" stroke-width="1.5"/><path d="M6.5 15h11" stroke="#ffb02e" stroke-width="1.5"/><circle cx="10" cy="17" r="1" fill="#ffb02e"/><circle cx="14" cy="19" r="0.8" fill="#b14bff"/></svg>`,
+      sat: `<svg viewBox="0 0 24 24" fill="none" stroke="#9fb4ff" stroke-width="1.5"><path d="M3 15l6-6 3 3-6 6z"/><path d="M12 6l3-3 3 3-3 3z"/><path d="M9 9l3 3"/><path d="M15 15a5 5 0 01-5 5"/><path d="M18 15a8 8 0 01-8 8"/></svg>`,
+      drop: (c) => `<svg viewBox="0 0 48 48"><defs><radialGradient id="dg${c.replace('#','')}" cx="38%" cy="30%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="30%" stop-color="${c}"/><stop offset="100%" stop-color="${c}"/></radialGradient></defs><path d="M24 4c7 9 13 14 13 22a13 13 0 11-26 0c0-8 6-13 13-22z" fill="url(#dg${c.replace('#','')})" stroke="rgba(255,255,255,.25)"/><ellipse cx="19" cy="22" rx="3" ry="5" fill="#fff" opacity=".35"/></svg>`,
+      ig: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>`,
+      x: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3h3l-7 8 8 10h-6l-5-6-5 6H2l8-9L3 3h6l4 5z"/></svg>`,
+      fb: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V5h-3c-2.2 0-4 1.8-4 4v2H7v4h3v6h4v-6h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg>`,
+      yt: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12s0-3-.4-4.4a2.6 2.6 0 00-1.8-1.8C18.4 5.4 12 5.4 12 5.4s-6.4 0-7.8.4A2.6 2.6 0 002.4 7.6C2 9 2 12 2 12s0 3 .4 4.4a2.6 2.6 0 001.8 1.8c1.4.4 7.8.4 7.8.4s6.4 0 7.8-.4a2.6 2.6 0 001.8-1.8C22 15 22 12 22 12zm-12 3V9l5 3z"/></svg>`
+    };
+
+    const BURGERS = [
+      { n:'01', name:'Basic Orbit', mission:'Misión 01', c1:'#ffce6b', c2:'#ff8a2e', price:'$89', level:'Iniciación',
+        desc:'La base de nuestra galaxia. Simple, jugosa y perfecta.',
+        ing:['Pan de papa','1 carne premium','Cheddar fundido','Pepinillos dulces','Salsa secreta'] },
+      { n:'02', name:'Double Pulse', mission:'Misión 02', c1:'#ffb0d0', c2:'#b14bff', price:'$119', level:'Doble impulso',
+        desc:'Doble potencia para los que no se conforman con poco.',
+        ing:['Pan de papa','2 carnes premium','Doble cheddar','Tocineta ahumada','Pepinillos','Salsa secreta'] },
+      { n:'03', name:'Triple Belt', mission:'Misión 03 · Especialidad', c1:'#ffcf5c', c2:'#7b3ff2', price:'$149', level:'★ Firma',
+        desc:'Nuestra especialidad de la casa. El equilibrio de tres estrellas.',
+        ing:['Pan de papa','3 carnes premium','Doble cheddar','Tocineta','Mermelada de tocineta','Pepinillos','Extra salsa secreta'] },
+      { n:'04', name:'Supernova', mission:'Misión 04', c1:'#fff0a0', c2:'#ff5d3a', price:'$179', level:'Nivel máximo',
+        desc:'La prueba definitiva para un verdadero astronauta.',
+        ing:['Pan de papa','4 carnes premium','Cheddar en cada capa','Tocineta','Mermelada de tocineta / cebolla caramelizada','Pepinillos'] },
+      { n:'05', name:'Crispy Twist', mission:'Misión 05', c1:'#ffe08a', c2:'#e0902e', price:'$115', level:'Crunch',
+        desc:'Nuestra versión del pollo frito americano con un giro galáctico.',
+        ing:['Pan de papa','Pechuga ultra crujiente','Doble empanizado artesanal','Cheddar','Pepinillos','Salsa miel-mostaza'] },
+      { n:'06', name:'Solar Spicy Flare', mission:'Misión 06', c1:'#ff9a3a', c2:'#e0341c', price:'$129', level:'Picante',
+        desc:'El contraste perfecto de calor y dulzura.',
+        ing:['Pan de papa','2 carnes premium','Queso fundido picante','Tocineta','Cebolla caramelizada'] },
+    ];
+
+    const SHAKES = [
+      { key:'strawberry', name:'Strawberry Nebula', flavor:'Fresa Natural', desc:'Frescura roja, cremosa y natural.' },
+      { key:'mango', name:'Mango Sunrise', flavor:'Mango Natural', desc:'El amanecer tropical y vibrante.' },
+      { key:'dark', name:'Dark Matter', flavor:'Chocolate Premium', desc:'El sabor más profundo y adictivo de la galaxia.' },
+    ];
+
+    const SAUCES = [
+      { name:'Salsa Stardust', tag:'La de la casa', color:'#ffb02e' },
+      { name:'Salsa Solar', tag:'La picante de la Solar Flare', color:'#e0341c' },
+      { name:'Honey Moon', tag:'Miel y mostaza', color:'#ffd34d' },
+    ];
+
+    const FEATURES = [
+      { ico:'flame', h:'Smash al fierro', p:'Carne prensada a 250°C para una costra dorada y crujiente en cada bocado.' },
+      { ico:'bun', h:'Pan de papa', p:'Suave, dorado y esponjoso. La plataforma de lanzamiento perfecta.' },
+      { ico:'flask', h:'Salsa Stardust', p:'Nuestra fórmula clasificada. El ingrediente que hace despegar cada misión.' },
+      { ico:'sat', h:'Entrega orbital', p:'De la plancha a tu órbita en 15 minutos. Sabor que no espera.' },
+    ];
+
+    /* ---- render menu cards ---- */
+    document.getElementById('menuGrid').innerHTML = BURGERS.map(b => `
+      <div class="card">
+        ${SVG.planet(b.n, b.c1, b.c2)}
+        <span class="mission">${b.mission}</span>
+        <h3>${b.name}</h3>
+        <p class="desc">${b.desc}</p>
+        <ul class="ingredients">${b.ing.map(i=>`<li>${i}</li>`).join('')}</ul>
+        <div class="foot"><span class="price">${b.price}</span><span class="level">${b.level}</span></div>
+      </div>`).join('');
+
+    /* ---- render shakes ---- */
+    document.getElementById('shakeGrid').innerHTML = SHAKES.map(s => `
+      <div class="shake">
+        <canvas data-scene="shake" data-flavor="${s.key}"></canvas>
+        <span class="flavor">${s.flavor}</span>
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+      </div>`).join('');
+
+    /* ---- render sauces ---- */
+    document.getElementById('boosterWrap').innerHTML = SAUCES.map(s => `
+      <div class="sauce">${SVG.drop(s.color)}<div><h4>${s.name}</h4><span>${s.tag}</span></div></div>`).join('');
+
+    /* ---- render features ---- */
+    document.getElementById('features').innerHTML = FEATURES.map(f => `
+      <div class="feature"><div class="fico">${SVG[f.ico]}</div><h4>${f.h}</h4><p>${f.p}</p></div>`).join('');
+
+    /* ---- social ---- */
+    document.getElementById('social').innerHTML =
+      ['ig','x','fb','yt'].map(k=>`<a href="#" aria-label="${k}">${SVG[k]}</a>`).join('');
+
+    /* ---- starfield ---- */
+    (function () {
+      const canvas = document.getElementById('stars'), ctx = canvas.getContext('2d');
+      let w, h, stars = [];
+      function resize() {
+        w = canvas.width = innerWidth; h = canvas.height = innerHeight;
+        const count = Math.min(190, Math.floor((w*h)/9000));
+        stars = Array.from({length:count}, () => ({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+0.2,a:Math.random(),s:Math.random()*0.02+0.005}));
+      }
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        for (const st of stars){ st.a+=st.s; if(st.a>1||st.a<0.1) st.s*=-1; ctx.globalAlpha=Math.abs(st.a); ctx.fillStyle='#eaf0ff'; ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,7); ctx.fill(); }
+        ctx.globalAlpha=1; requestAnimationFrame(draw);
+      }
+      resize(); draw(); addEventListener('resize', resize);
+    })();
+
+    /* ---- nav + header ---- */
+    document.getElementById('navToggle').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+    document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () => document.getElementById('nav').classList.remove('open')));
+    addEventListener('scroll', () => { document.querySelector('header').style.background = scrollY>40 ? 'rgba(5,6,15,0.92)' : 'linear-gradient(180deg, rgba(5,6,15,0.85), rgba(5,6,15,0))'; });
+
+    /* ---- reveal cards ---- */
+    const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {threshold:0.12});
+    document.querySelectorAll('.card').forEach(c=>io.observe(c));
+
+    /* ---- order demo ---- */
+    document.getElementById('orderBtn').addEventListener('click', (e)=>{ e.preventDefault(); const b=e.currentTarget,o=b.textContent; b.textContent='¡Despegue confirmado!'; setTimeout(()=>b.textContent=o,2200); });
+  </script>
+
+  <!-- ================= REAL 3D (WebGL / Three.js) ================= -->
+  <script type="module">
+    let THREE;
+    try {
+      THREE = await import('./vendor/three.module.js');
+    } catch (err) {
+      console.warn('Three.js no disponible, usando respaldo estático.', err);
+      // graceful fallback: paint a gradient burger emoji-free placeholder
+      document.querySelectorAll('canvas[data-scene]').forEach(c => {
+        c.style.background = 'radial-gradient(circle at 50% 40%, rgba(255,176,46,.3), transparent 70%)';
+      });
+    }
+
+    if (THREE) {
+      const scenes = [];
+
+      function baseScene(canvas) {
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+
+        scene.add(new THREE.AmbientLight(0x6070a0, 1.3));
+        const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(4, 7, 5); scene.add(key);
+        const purple = new THREE.PointLight(0xb14bff, 60, 40); purple.position.set(-5, 2, 3); scene.add(purple);
+        const orange = new THREE.PointLight(0xff7a1a, 45, 40); orange.position.set(4, -3, 4); scene.add(orange);
+        return { renderer, scene, camera };
+      }
+
+      function fit(ctx) {
+        const c = ctx.renderer.domElement;
+        const w = c.clientWidth || 400, h = c.clientHeight || 400;
+        if (c.width !== w * Math.min(devicePixelRatio,2) || c.height !== h * Math.min(devicePixelRatio,2)) {
+          ctx.renderer.setSize(w, h, false);
+          ctx.camera.aspect = w / h; ctx.camera.updateProjectionMatrix();
+        }
+      }
+
+      /* ---------- BURGER MODEL ---------- */
+      function buildBurger() {
+        const g = new THREE.Group();
+        const mat = (color, rough=0.65, metal=0.05) => new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal });
+
+        // bottom bun
+        const bottom = new THREE.Mesh(new THREE.CylinderGeometry(1.12, 0.95, 0.55, 48), mat(0xc9822f, 0.75));
+        bottom.position.y = -1.15; g.add(bottom);
+        // patty
+        const patty = new THREE.Mesh(new THREE.CylinderGeometry(1.18, 1.18, 0.4, 48), mat(0x4a2c17, 0.9));
+        patty.position.y = -0.72; g.add(patty);
+        // cheese (square, drooping corners) rotated 45°
+        const cheese = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.1, 2.15), mat(0xf2a007, 0.35));
+        cheese.position.y = -0.48; cheese.rotation.y = Math.PI / 4; g.add(cheese);
+        // lettuce ring
+        const lettuce = new THREE.Mesh(new THREE.TorusGeometry(1.02, 0.2, 10, 40), mat(0x5bb03b, 0.7));
+        lettuce.rotation.x = Math.PI / 2; lettuce.scale.y = 0.6; lettuce.position.y = -0.32; g.add(lettuce);
+        // top bun (dome)
+        const topBun = new THREE.Mesh(new THREE.SphereGeometry(1.15, 48, 32, 0, Math.PI*2, 0, Math.PI/2), mat(0xdb9a3d, 0.7));
+        topBun.scale.y = 0.85; topBun.position.y = -0.12; g.add(topBun);
+        const topBase = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.05, 0.25, 48), mat(0xd0902f, 0.7));
+        topBase.position.y = -0.2; g.add(topBase);
+        // sesame seeds
+        const seedMat = mat(0xf5e6c8, 0.5);
+        const seedGeo = new THREE.SphereGeometry(0.055, 8, 8);
+        for (let i = 0; i < 26; i++) {
+          const seed = new THREE.Mesh(seedGeo, seedMat);
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.random() * Math.PI * 0.4;
+          const r = 1.14;
+          seed.position.set(Math.sin(phi)*Math.cos(theta)*r, -0.12 + Math.cos(phi)*0.85*r, Math.sin(phi)*Math.sin(theta)*r);
+          seed.scale.set(1, 0.6, 1.4);
+          g.add(seed);
+        }
+        g.scale.setScalar(1.15);
+        g.position.y = 0.35;
+        return g;
+      }
+
+      /* ---------- SHAKE MODEL ---------- */
+      const SHAKE_COLORS = { strawberry: 0xff5d8f, mango: 0xffa52e, dark: 0x5a3320 };
+      const STRAW_COLORS = { strawberry: 0xb14bff, mango: 0xff5d8f, dark: 0xffb02e };
+      function buildShake(flavor) {
+        const g = new THREE.Group();
+        const liquidColor = SHAKE_COLORS[flavor] || 0xff5d8f;
+
+        // glass
+        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.28, roughness: 0.05, metalness: 0, transmission: 0.85, thickness: 0.6, ior: 1.35, clearcoat: 1 });
+        const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.58, 2.1, 44, 1, true), glassMat);
+        g.add(glass);
+        // glass bottom
+        const bottom = new THREE.Mesh(new THREE.CircleGeometry(0.58, 40), glassMat);
+        bottom.rotation.x = -Math.PI / 2; bottom.position.y = -1.05; g.add(bottom);
+        // liquid
+        const liq = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.56, 1.75, 44), new THREE.MeshStandardMaterial({ color: liquidColor, roughness: 0.35, metalness: 0.05 }));
+        liq.position.y = -0.12; g.add(liq);
+        // whipped cream (stacked spheres swirl)
+        const cream = new THREE.MeshStandardMaterial({ color: 0xfff6ea, roughness: 0.6 });
+        const sizes = [0.72, 0.58, 0.44, 0.3];
+        let y = 0.85;
+        sizes.forEach((s, i) => { const b = new THREE.Mesh(new THREE.SphereGeometry(s, 24, 20), cream); b.position.set(Math.sin(i*1.7)*0.08, y, Math.cos(i*1.7)*0.08); g.add(b); y += s*0.72; });
+        // cherry
+        const cherry = new THREE.Mesh(new THREE.SphereGeometry(0.16, 20, 16), new THREE.MeshStandardMaterial({ color: 0xe01030, roughness: 0.25 }));
+        cherry.position.y = y + 0.02; g.add(cherry);
+        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.25), new THREE.MeshStandardMaterial({ color: 0x3a6b28 }));
+        stem.position.set(0.05, y + 0.2, 0); stem.rotation.z = 0.4; g.add(stem);
+        // straw
+        const straw = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 2.4, 16), new THREE.MeshStandardMaterial({ color: STRAW_COLORS[flavor], roughness: 0.4 }));
+        straw.position.set(0.42, 1.0, 0.15); straw.rotation.z = 0.32; g.add(straw);
+
+        g.position.y = -0.15;
+        return g;
+      }
+
+      /* ---------- mount all canvases ---------- */
+      document.querySelectorAll('canvas[data-scene]').forEach(canvas => {
+        const ctx = baseScene(canvas);
+        const type = canvas.dataset.scene;
+        let obj;
+        if (type === 'burger') { obj = buildBurger(); ctx.camera.position.set(0, 0.4, 6.4); }
+        else { obj = buildShake(canvas.dataset.flavor); ctx.camera.position.set(0, 0.2, 5.6); }
+        ctx.scene.add(obj);
+        ctx.camera.lookAt(0, 0, 0);
+
+        const state = { obj, ctx, visible: true, dragging: false, px: 0, vel: 0.006, tilt: 0.12 };
+        obj.rotation.x = state.tilt;
+
+        // drag to rotate
+        if (canvas.dataset.interactive || true) {
+          const down = e => { state.dragging = true; state.px = (e.touches ? e.touches[0].clientX : e.clientX); };
+          const move = e => { if (!state.dragging) return; const x = (e.touches ? e.touches[0].clientX : e.clientX); const dx = x - state.px; state.px = x; obj.rotation.y += dx * 0.01; state.vel = dx * 0.001; };
+          const up = () => state.dragging = false;
+          canvas.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up);
+        }
+
+        // pause offscreen
+        new IntersectionObserver(es => es.forEach(e => state.visible = e.isIntersecting), { threshold: 0.05 }).observe(canvas);
+        scenes.push(state);
+      });
+
+      function loop() {
+        for (const s of scenes) {
+          if (!s.visible) continue;
+          fit(s.ctx);
+          if (!s.dragging) { s.obj.rotation.y += s.vel; s.vel += (0.006 - s.vel) * 0.02; }
+          s.ctx.renderer.render(s.ctx.scene, s.ctx.camera);
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+  </script>
+</body>
+</html>
