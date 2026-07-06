@@ -81,8 +81,8 @@
     .stage.has-photo canvas { opacity:0; pointer-events:none; }
     .card-img { display:block; width:calc(100% + 52px); height:190px; object-fit:cover; margin:-30px -26px 8px; border-bottom:1px solid var(--glass-brd); }
     .shake-photo { width:100%; height:300px; object-fit:contain; display:block; }
-    .hero-real { position:relative; z-index:1; max-width:100%; max-height:540px; object-fit:contain; filter:drop-shadow(0 26px 50px rgba(0,0,0,.6)) drop-shadow(0 0 46px rgba(255,106,26,.22)); animation:floatBurger 5.5s ease-in-out infinite; }
-    @keyframes floatBurger { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-16px); } }
+    .hero-real { position:relative; z-index:1; display:block; margin:0 auto; max-width:88%; max-height:500px; object-fit:contain; filter:drop-shadow(0 22px 44px rgba(0,0,0,.55)) drop-shadow(0 0 46px rgba(255,106,26,.22)); animation:floatBurger 6s ease-in-out infinite; }
+    @keyframes floatBurger { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
     .scroll-hint { position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); z-index:4; text-align:center; opacity:.7; font-size:.78rem; letter-spacing:2px; animation:floatHint 2.4s ease-in-out infinite; }
     @keyframes floatHint { 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,8px); } }
 
@@ -204,12 +204,13 @@
       .hero { grid-template-columns:1fr; text-align:center; padding-top:120px; }
       .hero-copy p.lead { margin-left:auto; margin-right:auto; }
       .hero-actions, .badges { justify-content:center; }
-      .stage { order:-1; height:400px; }
+      .stage { order:-1; height:auto; min-height:300px; padding:10px 24px 20px; }
+      .hero-real { max-width:78%; max-height:340px; }
       nav ul { display:none; }
       .nav-toggle { display:block; }
       nav.open ul { display:flex; flex-direction:column; position:absolute; top:66px; right:20px; background:rgba(12,8,5,0.97); padding:20px 26px; border-radius:16px; gap:18px; border:1px solid var(--glass-brd); }
     }
-    @media (prefers-reduced-motion: reduce) { .halo,.fico,.scroll-hint,.glow,.logo svg,.soon::before { animation:none !important; } .reveal { transition:none; } }
+    @media (prefers-reduced-motion: reduce) { .halo,.fico,.scroll-hint,.glow,.logo svg,.soon::before,.hero-real { animation:none !important; } .reveal { transition:none; } }
   </style>
 </head>
 <body>
