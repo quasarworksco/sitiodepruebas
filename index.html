@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Orion Burger · Sabor de otra galaxia</title>
-  <meta name="description" content="Orion Burger — Smash burgers y batidos de otra galaxia. Sabor real, servido en 3D." />
+  <meta name="description" content="Orion Burger — Smash burgers y batidos de otra galaxia. Sabor real que despega." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='48' r='30' fill='%23ff8a2e'/%3E%3Cellipse cx='50' cy='54' rx='46' ry='15' fill='none' stroke='%23ff5010' stroke-width='5' transform='rotate(-22 50 54)'/%3E%3C/svg%3E" />
   <style>
     :root {
@@ -81,6 +81,8 @@
     .stage.has-photo canvas { opacity:0; pointer-events:none; }
     .card-img { display:block; width:calc(100% + 52px); height:190px; object-fit:cover; margin:-30px -26px 8px; border-bottom:1px solid var(--glass-brd); }
     .shake-photo { width:100%; height:300px; object-fit:contain; display:block; }
+    .hero-real { position:relative; z-index:1; max-width:100%; max-height:540px; object-fit:contain; filter:drop-shadow(0 26px 50px rgba(0,0,0,.6)) drop-shadow(0 0 46px rgba(255,106,26,.22)); animation:floatBurger 5.5s ease-in-out infinite; }
+    @keyframes floatBurger { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-16px); } }
     .scroll-hint { position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); z-index:4; text-align:center; opacity:.7; font-size:.78rem; letter-spacing:2px; animation:floatHint 2.4s ease-in-out infinite; }
     @keyframes floatHint { 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,8px); } }
 
@@ -259,15 +261,14 @@
       <div class="badges reveal" style="--d:.7s">
         <div class="badge"><b>6</b><span>SABORES</span></div>
         <div class="badge"><b>100%</b><span>CARNE PREMIUM</span></div>
-        <div class="badge"><b>3D</b><span>EXPERIENCIA REAL</span></div>
+        <div class="badge"><b>#1</b><span>EN SABOR</span></div>
       </div>
     </div>
     <div class="stage">
       <div class="halo"></div>
-      <canvas id="c-hero" data-scene="burger" data-interactive="1"></canvas>
-      <img id="heroPhoto" class="stage-photo" alt="Orion Burger" />
+      <img class="hero-real" src="img/burger-crispy.png" alt="Orion Burger — hamburguesa crujiente con queso" />
     </div>
-    <div class="scroll-hint">DESPLÁZATE Y ARRASTRA EL 3D <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="scroll-hint">DESPLÁZATE PARA VER EL MENÚ <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M6 9l6 6 6-6"/></svg></div>
   </main>
 
   <!-- MENU -->
@@ -285,7 +286,7 @@
     <div class="section-head">
       <span class="eyebrow reveal">Batidos Orion</span>
       <h2 class="section-title reveal" style="--d:.1s">Batidos <span class="glow">de la galaxia</span></h2>
-      <p class="section-sub reveal" style="--d:.2s">Cremosos, naturales y en 3D real. Arrástralos para girarlos.</p>
+      <p class="section-sub reveal" style="--d:.2s">Cremosos y naturales, hechos al momento.</p>
     </div>
     <div class="shake-grid" id="shakeGrid"></div>
   </section>
