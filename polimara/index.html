@@ -47,8 +47,7 @@
     header .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:rgba(255,255,255,0.9);}
     .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);}
     .shield{width:46px;height:46px;flex:0 0 auto;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.55));}
-    .brand-emblem{position:relative;display:inline-flex;width:46px;height:46px;flex:0 0 auto;}
-    .brand-emblem img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.5));}
+    .brand-banner{height:48px;width:auto;max-width:min(66vw,380px);object-fit:contain;display:block;}
     .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;color:var(--blue);}
     .brand .wm small{display:block;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:2px;text-transform:uppercase;}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
@@ -211,44 +210,8 @@
 
   <header>
     <a class="brand" href="#" onclick="return false">
-      <span class="brand-emblem">
-      <img src="logo.png" alt="Escudo POLIMARA" onload="this.nextElementSibling.style.display='none'" onerror="this.remove()"/>
-      <svg class="shield" viewBox="0 0 200 200" aria-label="Escudo POLIMARA - Policía del Municipio Mara">
-        <defs>
-          <path id="pmArcTop" d="M20 100 A80 80 0 0 1 180 100" fill="none"/>
-          <path id="pmArcBot" d="M20 100 A80 80 0 0 0 180 100" fill="none"/>
-          <linearGradient id="pmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eef8ff"/></linearGradient>
-          <clipPath id="pmShieldClip"><path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z"/></clipPath>
-        </defs>
-        <!-- anillo azul con borde blanco -->
-        <circle cx="100" cy="100" r="98" fill="#0f3a92"/>
-        <circle cx="100" cy="100" r="95" fill="#ffffff"/>
-        <circle cx="100" cy="100" r="92" fill="#12409e"/>
-        <circle cx="100" cy="100" r="67" fill="#ffffff"/>
-        <!-- texto del anillo -->
-        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="18" letter-spacing="3"><textPath href="#pmArcTop" startOffset="50%" text-anchor="middle">POLICIA</textPath></text>
-        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="12" letter-spacing="1"><textPath href="#pmArcBot" startOffset="50%" text-anchor="middle">MUNICIPIO · MARA</textPath></text>
-        <!-- escudo verde -->
-        <path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z" fill="#2a9d3f" stroke="#17662a" stroke-width="2.5"/>
-        <g clip-path="url(#pmShieldClip)">
-          <rect x="56" y="54" width="88" height="72" fill="url(#pmSky)"/>
-          <circle cx="120" cy="92" r="12" fill="#ff9e2c"/>
-          <path d="M56 106 L78 84 L94 100 L116 82 L144 108 V128 H56 Z" fill="#6cae54"/>
-          <path d="M56 96 L70 84 L82 96 Z" fill="#8a5a34"/>
-          <rect x="56" y="118" width="88" height="24" fill="#2f7fd0"/>
-          <path d="M56 118 h88 v3.5 h-88 z" fill="#8ec3ee"/>
-          <path d="M74 118 q-3 -20 -8 -30" stroke="#6b4a2b" stroke-width="3.5" fill="none"/>
-          <g fill="#1f7a34">
-            <path d="M66 88 q-14 -7 -20 1 q11 -3 20 5z"/>
-            <path d="M66 88 q14 -7 20 1 q-11 -3 -20 5z"/>
-            <path d="M66 88 q-7 -14 -2 -22 q5 9 2 22z"/>
-            <path d="M66 88 q9 -11 18 -10 q-9 4 -18 13z"/>
-          </g>
-          <path d="M98 130 h18 l-4 7 h-10 z" fill="#d94a3a"/>
-        </g>
-      </svg>
-      </span>
-      <span class="wm"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
+      <img class="brand-banner" src="logo.png" alt="POLIMARA · Instituto Autónomo de Policía del Municipio Mara" onerror="this.remove();var f=document.getElementById('brandFallback');if(f)f.style.display='flex'"/>
+      <span class="wm" id="brandFallback" style="display:none"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
     </a>
     <div class="top-actions">
       <button class="btn ghost sm" onclick="exportCSV()" title="Descargar todos los registros en CSV">
@@ -829,19 +792,26 @@
       ? `canceló la multa correspondiente por un monto de <b>${money(v.pago.monto)}</b>, mediante <b>${esc(v.pago.metodo)}</b>, según referencia / N° de pago <b>${esc(v.pago.referencia)}</b> de fecha ${fmtDate(v.pago.fecha)}`
       : `<b>NO</b> ha cancelado la multa correspondiente al presente procedimiento, quedando pendiente dicha obligación`;
     const prop = v.propietarioNombre ? `El vehículo figura a nombre del ciudadano(a) <b>${esc(v.propietarioNombre)}</b>${v.propietarioCedula?(', C.I. <b>'+esc(v.propietarioCedula)+'</b>')+'.':'.'} ` : '';
+    // Membrete: usa el logo horizontal oficial; si no existe, arma el encabezado con el escudo SVG
+    const letterhead = LOGO_OK
+      ? `<div style="text-align:center;margin-bottom:2px">
+           <div style="font-size:9.5pt;letter-spacing:.5px">${INST.pais}</div>
+           <img src="logo.png" alt="POLIMARA - Instituto Autónomo de Policía del Municipio Mara" style="max-width:72%;height:auto;margin:5px auto 2px"/>
+           ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
+         </div>`
+      : `<table style="width:100%;border-collapse:collapse"><tr>
+           <td style="width:92px;vertical-align:middle">${logoMarkup(82)}</td>
+           <td style="text-align:center;vertical-align:middle;line-height:1.35">
+             <div style="font-size:9.5pt">${INST.pais}</div>
+             <div style="font-weight:bold;font-size:12.5pt;letter-spacing:.5px">${INST.nombre}</div>
+             <div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div>
+             <div style="font-size:9pt">${INST.rif}</div>
+             ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
+           </td>
+           <td style="width:92px"></td>
+         </tr></table>`;
     document.getElementById('actaPrint').innerHTML = `
-      <!-- MEMBRETE -->
-      <table style="width:100%;border-collapse:collapse"><tr>
-        <td style="width:92px;vertical-align:middle">${logoMarkup(82)}</td>
-        <td style="text-align:center;vertical-align:middle;line-height:1.35">
-          <div style="font-size:9.5pt">${INST.pais}</div>
-          <div style="font-weight:bold;font-size:12.5pt;letter-spacing:.5px">${INST.nombre}</div>
-          <div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div>
-          <div style="font-size:9pt">${INST.rif}</div>
-          ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
-        </td>
-        <td style="width:92px"></td>
-      </tr></table>
+      ${letterhead}
       <hr style="border:none;border-top:2px solid #12409e;margin:8px 0 4px"/>
       <hr style="border:none;border-top:1px solid #12409e;margin:0 0 16px"/>
 
