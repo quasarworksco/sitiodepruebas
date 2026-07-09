@@ -51,6 +51,8 @@
     .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;color:var(--blue);}
     .brand .wm small{display:block;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:2px;text-transform:uppercase;}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .sync-status{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;background:rgba(20,45,95,0.05);border:1px solid var(--brd);}
+    @media (max-width:560px){ .sync-status span{display:none;} }
 
     /* ---------- buttons ---------- */
     .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid transparent;font-weight:700;font-size:.9rem;letter-spacing:.3px;
@@ -74,14 +76,11 @@
     main{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:26px clamp(14px,4vw,40px) 80px;}
 
     /* ---------- hero / intro ---------- */
-    .intro{padding:28px;margin-bottom:22px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.55fr .95fr;gap:28px;align-items:center;}
+    .intro{padding:28px;margin-bottom:22px;position:relative;overflow:hidden;}
     .intro-eyebrow{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
-    .intro h1{font-size:clamp(1.4rem,3vw,2.05rem);font-weight:800;letter-spacing:-.3px;line-height:1.18;color:var(--ink);}
-    .intro p{color:var(--dim);max-width:640px;margin-top:12px;font-size:.96rem;}
-    .legal{margin-top:14px;font-size:.78rem;color:var(--muted);border-left:2px solid var(--brd-2);padding-left:12px;line-height:1.5;}
-    .intro-logo{display:flex;justify-content:center;align-items:center;padding-left:26px;border-left:1px solid var(--brd);}
-    .intro-logo img{width:min(300px,100%);height:auto;}
-    @media (max-width:760px){ .intro{grid-template-columns:1fr;gap:20px;} .intro-logo{border-left:none;border-top:1px solid var(--brd);padding-left:0;padding-top:20px;} }
+    .intro h1{font-size:clamp(1.4rem,3vw,2.05rem);font-weight:800;letter-spacing:-.3px;line-height:1.18;color:var(--ink);max-width:820px;}
+    .intro p{color:var(--dim);max-width:820px;margin-top:12px;font-size:.96rem;}
+    .legal{margin-top:14px;font-size:.78rem;color:var(--muted);border-left:2px solid var(--brd-2);padding-left:12px;line-height:1.5;max-width:820px;}
 
     /* ---------- stats ---------- */
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px;}
@@ -271,6 +270,7 @@
       <span class="wm" id="brandFallback" style="display:none"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
     </a>
     <div class="top-actions">
+      <span id="syncStatus" class="sync-status" title="Estado de sincronización con la base de datos"></span>
       <button class="btn ghost sm" onclick="exportCSV()" title="Descargar todos los registros en CSV">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
         Exportar CSV
@@ -284,15 +284,10 @@
 
   <main>
     <section class="glass intro">
-      <div class="intro-text">
-        <div class="intro-eyebrow">Sistema institucional de control vehicular</div>
-        <h1>Control de entrada, salida y entrega de vehículos retenidos</h1>
-        <p>Plataforma para la administración de las motocicletas y vehículos que permanecen retenidos en el comando: registro de entrada, libro de novedades, asiento del pago de la multa y emisión del acta policial de entrega con la firma de quien retira.</p>
-        <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y de la firma de la persona que retira; el libro de novedades registra la entrada y la salida.</p>
-      </div>
-      <div class="intro-logo">
-        <img src="logo.png" alt="POLIMARA · Instituto Autónomo de Policía del Municipio Mara" onerror="this.closest('.intro-logo').style.display='none'"/>
-      </div>
+      <div class="intro-eyebrow">Sistema institucional de control vehicular</div>
+      <h1>Control de entrada, salida y entrega de vehículos retenidos</h1>
+      <p>Plataforma para la administración de las motocicletas y vehículos que permanecen retenidos en el comando: registro de entrada, libro de novedades, asiento del pago de la multa y emisión del acta policial de entrega con la firma de quien retira.</p>
+      <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y de la firma de la persona que retira; el libro de novedades registra la entrada y la salida.</p>
     </section>
 
     <section class="stats">
@@ -552,11 +547,27 @@
   <div id="actaPrint"></div>
   <div id="toast"></div>
 
+  <!-- Firebase (SDK compat: expone el objeto global `firebase`) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
   <script>
-  /* ================= STORAGE ================= */
+  /* ================= STORAGE (Firestore + respaldo local) ================= */
   const KEY = 'polimara_v1';
-  let DB = load();
+  const COL = 'vehiculos';
+  let DB = [];
   let currentId = null; // for modals
+
+  // Configuración de Firebase (POLIMARA)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBnezsjfhFKEcFfvRGHbWVA9v3dLvys0Oo",
+    authDomain: "polimaradvt.firebaseapp.com",
+    projectId: "polimaradvt",
+    storageBucket: "polimaradvt.firebasestorage.app",
+    messagingSenderId: "89248498850",
+    appId: "1:89248498850:web:167d1269f26572ea4183fb"
+  };
+  let fs = null, cloud = false;
 
   /* Datos institucionales para el acta */
   const INST = {
@@ -596,11 +607,69 @@
     im.src = 'logo.png';
   })();
 
-  function load(){
-    try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){ return []; }
-  }
-  function persist(){ localStorage.setItem(KEY, JSON.stringify(DB)); }
   function uid(){ return 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+  /* --- Respaldo local (se guarda en CADA cambio; ningún dato se pierde) --- */
+  function persistLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(_){} }
+  function loadLocal(){ try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(_){ return []; } }
+
+  function setSync(state){
+    const el = document.getElementById('syncStatus'); if(!el) return;
+    const map = {
+      nube:  ['#1e6b46','Sincronizado','M20 6 9 17l-5-5'],
+      local: ['#b45309','Sin conexión · guardado local','M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z'],
+      guardando:['#6b7994','Guardando…','M21 12a9 9 0 1 1-6.22-8.56']
+    };
+    const m = map[state]||map.local;
+    el.style.color = m[0];
+    el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${m[2]}"/></svg><span>${m[1]}</span>`;
+  }
+
+  /* --- Firestore: base de datos principal con persistencia offline --- */
+  function initCloud(){
+    try{
+      if(typeof firebase==='undefined' || !firebase.firestore) return false;
+      firebase.initializeApp(firebaseConfig);
+      fs = firebase.firestore();
+      // Persistencia offline: cachea y ENCOLA las escrituras aunque no haya internet;
+      // se sincronizan solas al reconectar. Sobrevive recargas del navegador.
+      fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+      cloud = true; return true;
+    }catch(e){ console.warn('Firestore no disponible; se usa respaldo local.', e); cloud=false; return false; }
+  }
+
+  function startDB(){
+    DB = loadLocal();          // 1) carga inmediata desde el respaldo local
+    renderAll();
+    if(initCloud()){
+      setSync('guardando');
+      fs.collection(COL).orderBy('createdAt','desc').onSnapshot(
+        snap=>{
+          DB = snap.docs.map(d=> Object.assign({id:d.id}, d.data()));
+          persistLocal();      // 2) espeja la nube al respaldo local en CADA actualización
+          renderAll();
+          setSync(snap.metadata.fromCache ? 'local' : 'nube');
+        },
+        err=>{ console.error(err); setSync('local'); toast('Trabajando sin conexión: los datos se guardan localmente y se sincronizarán al reconectar.','warn'); }
+      );
+    } else { setSync('local'); }
+  }
+
+  /* Guarda/actualiza un registro: respaldo local inmediato + escritura en la nube */
+  function saveRecord(rec){
+    rec.dia = (rec.fechaEntrada||'').slice(0,10) || new Date().toISOString().slice(0,10);
+    rec.updatedAt = new Date().toISOString();
+    const i = DB.findIndex(x=>x.id===rec.id);
+    if(i>=0) DB[i]=rec; else DB.unshift(rec);
+    persistLocal();            // nunca se pierde: respaldo local en cada cambio
+    renderAll();
+    if(cloud){
+      setSync('guardando');
+      fs.collection(COL).doc(rec.id).set(rec)
+        .then(()=> setSync('nube'))
+        .catch(e=>{ console.error(e); setSync('local'); toast('Guardado localmente; pendiente de sincronizar con la nube.','warn'); });
+    }
+  }
 
   /* ================= HELPERS ================= */
   function fmtDate(iso){
@@ -691,7 +760,7 @@
         desc:`Ingresa ${d.tipo} ${d.placa?('placa '+d.placa.toUpperCase()):'(sin placa)'}. Motivo: ${d.motivoRetencion.trim()}. Recibe: ${d.funcionarioReceptor.trim()}.` }],
       createdAt: new Date().toISOString()
     };
-    DB.unshift(rec); persist(); renderAll();
+    saveRecord(rec);
     f.reset(); setNow();
     toast('Registro guardado y asentado en novedades', 'ok');
     switchTab('gestion');
@@ -746,7 +815,7 @@
     v.pago = { pagado:true, monto:d.monto, metodo:d.metodo, referencia:d.referencia.trim(), fecha:d.fechaPago, obs:(d.obsPago||'').trim() };
     v.novedades.push({ ts:d.fechaPago, tipo:'pago', titulo:'Pago de multa registrado',
       desc:`Cancela ${money(d.monto)} vía ${d.metodo}. Ref/N° pago: ${d.referencia.trim()}.` });
-    persist(); renderAll(); closeModal('ovPago');
+    saveRecord(v); closeModal('ovPago');
     if(document.getElementById('ovDetalle').classList.contains('show')) openDetalle(currentId);
     toast('Pago de multa registrado', 'ok');
     return false;
@@ -804,7 +873,7 @@
     v.estado = 'entregado';
     v.novedades.push({ ts:d.fechaEntrega, tipo:'salida', titulo:'Salida / entrega del vehículo',
       desc:`Se entrega a ${d.retiraNombre.trim()} (C.I. ${d.retiraCedula.trim()}, ${d.parentesco}). Entrega: ${d.funcionarioEntrega.trim()}. ${v.pago&&v.pago.pagado?'Multa cancelada.':'Multa pendiente.'} Acta ${actaNum}.` });
-    persist(); renderAll(); closeModal('ovEntrega');
+    saveRecord(v); closeModal('ovEntrega');
     toast('Entrega registrada. Generando acta…', 'ok');
     setTimeout(()=>openDetalle(v.id, true), 300);
     return false;
@@ -1099,31 +1168,8 @@
     if(document.getElementById('panel-cortes').classList.contains('active')) renderCortes();
   }
 
-  function seedIfEmpty(){
-    if(DB.length) return;
-    // registro de ejemplo para mostrar la interfaz
-    const now = new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
-    const iso = now.toISOString().slice(0,16);
-    DB = [{
-      id: uid(), numeroProcedimiento:'EXP-2026-0001', fechaEntrada:iso,
-      funcionarioReceptor:'Oficial Agregado J. Pérez', unidad:'Centro de Coordinación Policial N° 1',
-      motivoRetencion:'Conductor no porta documentos del vehículo',
-      tipo:'Motocicleta', placa:'AB123CD', marca:'Bera', modelo:'SBR', anio:'2022', color:'Negro',
-      serialCarroceria:'8X2XCKPF7NM000123', serialMotor:'162FMJ2200456', cilindraje:'150cc',
-      caracteristicas:'Motocicleta en buen estado, con casco negro y retrovisores completos.',
-      conductorNombre:'Carlos Rodríguez', conductorCedula:'V-20.111.222', conductorTelefono:'0412-1234567',
-      propietarioNombre:'Carlos Rodríguez', propietarioCedula:'V-20.111.222',
-      estado:'retenido', pago:{pagado:false}, entrega:null,
-      novedades:[{ts:iso,tipo:'entrada',titulo:'Entrada / retención del vehículo',
-        desc:'Ingresa Motocicleta placa AB123CD. Motivo: Conductor no porta documentos del vehículo. Recibe: Oficial Agregado J. Pérez.'}],
-      createdAt:new Date().toISOString()
-    }];
-    persist();
-  }
-
-  seedIfEmpty();
   setNow();
-  renderAll();
+  startDB();
   </script>
 </body>
 </html>
