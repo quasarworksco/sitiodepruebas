@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>POLIMARA · Control de Vehículos Retenidos</title>
   <meta name="description" content="Sistema de control, gestión, entrada, salida y entrega de vehículos retenidos en el comando policial. Registro de actas policiales, novedades y pago de multas." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230f3a92'/%3E%3Ccircle cx='50' cy='50' r='35' fill='%23fff'/%3E%3Cpath d='M50 24 L73 33 V55 C73 69 62 76 50 81 C38 76 27 69 27 55 V33 Z' fill='%232a9d3f'/%3E%3Ccircle cx='59' cy='46' r='6' fill='%23ff9e2c'/%3E%3Crect x='27' y='60' width='46' height='14' fill='%232f7fd0'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/jpeg" href="favicon.jpg" />
   <style>
     :root{
       --bg-0:#eef1f6;
@@ -51,8 +51,12 @@
     .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;color:var(--blue);}
     .brand .wm small{display:block;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:2px;text-transform:uppercase;}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .sync-status{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;background:rgba(20,45,95,0.05);border:1px solid var(--brd);}
-    @media (max-width:560px){ .sync-status span{display:none;} }
+    .sync-status{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:700;color:var(--muted);padding:5px 11px;border-radius:999px;background:rgba(20,45,95,0.05);border:1px solid var(--brd);transition:.2s;}
+    .sync-status.online{background:rgba(30,107,70,0.08);border-color:rgba(30,107,70,0.28);}
+    .sync-status.off{background:rgba(180,83,9,0.08);border-color:rgba(180,83,9,0.30);}
+    .sync-status.online svg{animation:pulse 2.2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    @media (max-width:600px){ .sync-status span{display:none;} }
 
     /* ---------- buttons ---------- */
     .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid transparent;font-weight:700;font-size:.9rem;letter-spacing:.3px;
@@ -76,11 +80,11 @@
     main{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:26px clamp(14px,4vw,40px) 80px;}
 
     /* ---------- hero / intro ---------- */
-    .intro{padding:28px;margin-bottom:22px;position:relative;overflow:hidden;}
-    .intro-eyebrow{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
-    .intro h1{font-size:clamp(1.4rem,3vw,2.05rem);font-weight:800;letter-spacing:-.3px;line-height:1.18;color:var(--ink);max-width:820px;}
-    .intro p{color:var(--dim);max-width:820px;margin-top:12px;font-size:.96rem;}
-    .legal{margin-top:14px;font-size:.78rem;color:var(--muted);border-left:2px solid var(--brd-2);padding-left:12px;line-height:1.5;max-width:820px;}
+    .pagehead{display:flex;align-items:center;gap:12px;margin:2px 0 20px;}
+    .pagehead-title{font-size:clamp(1.15rem,2.4vw,1.5rem);font-weight:800;letter-spacing:-.2px;color:var(--ink);}
+    .iconbtn{cursor:pointer;width:30px;height:30px;border-radius:50%;border:1px solid var(--brd-2);background:var(--glass);color:var(--blue);display:grid;place-items:center;transition:.15s;flex:0 0 auto;}
+    .iconbtn:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-1px);}
+    .legal{margin-top:14px;font-size:.82rem;color:var(--dim);border-left:2px solid var(--brd-2);padding-left:12px;line-height:1.6;}
 
     /* ---------- stats ---------- */
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px;}
@@ -193,6 +197,25 @@
     .corte-line{display:flex;gap:10px;font-size:.82rem;padding:4px 0;color:var(--dim);}
     .corte-line .t{font-family:"Consolas",monospace;color:var(--muted);flex:0 0 auto;}
 
+    /* ---------- métricas / gráficos ---------- */
+    .mx-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+    .mx-kpi{border:1px solid var(--brd);border-radius:11px;padding:14px 16px;background:rgba(255,255,255,0.45);}
+    .mx-kpi b{display:block;font-size:1.7rem;font-weight:800;color:var(--blue);line-height:1;font-variant-numeric:tabular-nums;}
+    .mx-kpi span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:6px;}
+    .mx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+    .mx-card{border:1px solid var(--brd);border-radius:12px;padding:16px 18px;background:rgba(255,255,255,0.45);}
+    .mx-card h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:800;margin-bottom:14px;}
+    .mx-card svg.chart{width:100%;height:auto;display:block;overflow:visible;}
+    .mx-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--dim);margin-top:12px;}
+    .mx-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+    .mx-hbar{margin-bottom:12px;}
+    .mx-hbar .mx-hbar-top{display:flex;justify-content:space-between;font-size:.83rem;margin-bottom:5px;color:var(--dim);}
+    .mx-hbar .mx-hbar-top b{color:var(--ink);font-variant-numeric:tabular-nums;}
+    .mx-track{height:9px;border-radius:6px;background:rgba(20,45,95,0.08);overflow:hidden;}
+    .mx-fill{height:100%;border-radius:6px;background:var(--blue);transition:width .5s cubic-bezier(.2,.8,.2,1);}
+    .mx-fill.alt{background:#8fa4cc;}
+    .mx-fill.ok{background:var(--ok);} .mx-fill.warn{background:var(--warn);}
+
     /* ---------- modal ---------- */
     .overlay{position:fixed;inset:0;z-index:200;background:rgba(15,30,60,0.42);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
     .overlay.show{display:flex;}
@@ -218,6 +241,38 @@
     .drawer-actions{padding:16px 22px;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,0.35);}
     .drawer-actions .btn{width:100%;justify-content:center;}
     @media (max-width:520px){ .drawer{width:100%;} }
+
+    /* ---------- inicio de sesión · liquid glass ---------- */
+    .login-gate{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;
+      background:rgba(18,40,80,0.34);backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%);
+      animation:fadeIn .4s ease both;}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .login-card{position:relative;width:100%;max-width:400px;padding:34px 30px;border-radius:24px;overflow:hidden;
+      background:rgba(255,255,255,0.55);
+      backdrop-filter:blur(34px) saturate(180%);-webkit-backdrop-filter:blur(34px) saturate(180%);
+      border:1px solid rgba(255,255,255,0.65);
+      box-shadow:0 30px 80px rgba(15,35,80,0.30), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.25);
+      animation:loginPop .5s cubic-bezier(.2,.8,.2,1) both;}
+    .login-card::before{content:"";position:absolute;left:0;right:0;top:0;height:55%;pointer-events:none;border-radius:24px 24px 0 0;
+      background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0) 100%);}
+    .login-card > *{position:relative;}
+    @keyframes loginPop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+    .login-brand{display:flex;justify-content:center;margin-bottom:14px;}
+    .login-brand img{width:min(220px,78%);height:auto;filter:drop-shadow(0 4px 12px rgba(15,35,80,0.18));}
+    .login-title{text-align:center;font-weight:800;font-size:1.05rem;color:var(--ink);letter-spacing:.3px;margin-bottom:16px;}
+    .login-tabs{display:flex;gap:6px;background:rgba(20,45,95,0.06);border:1px solid var(--brd);border-radius:11px;padding:5px;margin-bottom:18px;}
+    .login-tab{flex:1;cursor:pointer;border:none;background:transparent;color:var(--dim);font-weight:700;font-size:.85rem;padding:9px;border-radius:8px;transition:.18s;}
+    .login-tab.active{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(18,58,143,0.30);}
+    #loginGate .field{margin-bottom:12px;}
+    #loginGate input{background:rgba(255,255,255,0.72);}
+    .auth-error{background:rgba(176,32,32,0.10);border:1px solid rgba(176,32,32,0.32);color:var(--danger);font-size:.82rem;font-weight:600;padding:9px 12px;border-radius:9px;margin-bottom:8px;}
+    .login-note{text-align:center;color:var(--muted);font-size:.75rem;margin-top:16px;line-height:1.5;}
+
+    /* usuario en sesión */
+    .user-chip{display:none;align-items:center;gap:8px;font-size:.78rem;font-weight:600;color:var(--dim);padding:4px 6px 4px 12px;border-radius:999px;background:rgba(20,45,95,0.05);border:1px solid var(--brd);}
+    .user-chip .chip-logout{cursor:pointer;background:transparent;border:none;color:var(--muted);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;transition:.15s;}
+    .user-chip .chip-logout:hover{background:rgba(176,32,32,0.12);color:var(--danger);}
+    @media (max-width:600px){ .user-chip #userEmail{display:none;} }
 
     /* signature pad */
     .sig-wrap{position:relative;}
@@ -270,7 +325,12 @@
       <span class="wm" id="brandFallback" style="display:none"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
     </a>
     <div class="top-actions">
-      <span id="syncStatus" class="sync-status" title="Estado de sincronización con la base de datos"></span>
+      <span id="syncStatus" class="sync-status" title="Estado de conexión con la base de datos" style="display:none"></span>
+      <span id="userChip" class="user-chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="userEmail"></span>
+        <button class="chip-logout" type="button" onclick="doLogout()" title="Cerrar sesión"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
+      </span>
       <button class="btn ghost sm" onclick="exportCSV()" title="Descargar todos los registros en CSV">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
         Exportar CSV
@@ -283,12 +343,12 @@
   </header>
 
   <main>
-    <section class="glass intro">
-      <div class="intro-eyebrow">Sistema institucional de control vehicular</div>
-      <h1>Control de entrada, salida y entrega de vehículos retenidos</h1>
-      <p>Plataforma para la administración de las motocicletas y vehículos que permanecen retenidos en el comando: registro de entrada, libro de novedades, asiento del pago de la multa y emisión del acta policial de entrega con la firma de quien retira.</p>
-      <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y de la firma de la persona que retira; el libro de novedades registra la entrada y la salida.</p>
-    </section>
+    <div class="pagehead">
+      <h1 class="pagehead-title">Control de vehículos retenidos</h1>
+      <button class="iconbtn" type="button" onclick="openModal('ovInfo')" title="Información del sistema" aria-label="Información">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </button>
+    </div>
 
     <section class="stats">
       <div class="glass stat"><div class="k" id="stRet">0</div><div class="l">Retenidos actualmente</div>
@@ -310,6 +370,8 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>Libro de novedades</button>
       <button class="tab" data-tab="cortes" onclick="switchTab('cortes')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>Cortes diarios</button>
+      <button class="tab" data-tab="metricas" onclick="switchTab('metricas')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 15v-4M13 15V8M18 15v-6"/></svg>Métricas</button>
     </nav>
 
     <!-- ============ GESTIÓN ============ -->
@@ -448,6 +510,19 @@
         </div>
       </div>
     </section>
+
+    <!-- ============ MÉTRICAS ============ -->
+    <section class="panel" id="panel-metricas">
+      <div class="glass card">
+        <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 15v-4M13 15V8M18 15v-6"/></svg>Métricas y estadísticas</h2>
+        <p class="sub">Indicadores del movimiento de vehículos retenidos. Se actualizan automáticamente con cada registro.</p>
+        <div id="metricasBody"></div>
+        <div class="empty" id="emptyMetricas" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18M8 15v-4M13 15V8M18 15v-6"/></svg>
+          <div>Aún no hay datos para mostrar métricas.</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -544,11 +619,47 @@
     </aside>
   </div>
 
+  <!-- ============ INFORMACIÓN ============ -->
+  <div class="overlay" id="ovInfo">
+    <div class="glass modal">
+      <div class="modal-head">
+        <div><h3>Acerca del sistema</h3><p>POLIMARA · Control de vehículos retenidos</p></div>
+        <button class="x" onclick="closeModal('ovInfo')" aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p style="color:var(--dim);font-size:.94rem;line-height:1.6">Plataforma para la administración de las motocicletas y vehículos que permanecen retenidos en el comando: registro de entrada, libro de novedades, asiento del pago de la multa y emisión del acta policial de entrega con la firma de quien retira.</p>
+      <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y de la firma de la persona que retira; el libro de novedades registra la entrada y la salida.</p>
+      <div class="form-actions"><button type="button" class="btn" onclick="closeModal('ovInfo')">Entendido</button></div>
+    </div>
+  </div>
+
   <div id="actaPrint"></div>
   <div id="toast"></div>
 
+  <!-- ============ INICIO DE SESIÓN (liquid glass) ============ -->
+  <div id="loginGate" class="login-gate" style="display:none">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="logo.png" alt="POLIMARA" onerror="this.remove()"/>
+      </div>
+      <p class="login-title">Acceso al sistema</p>
+      <div class="login-tabs">
+        <button class="login-tab active" id="tabLogin" type="button" onclick="setAuthMode('login')">Iniciar sesión</button>
+        <button class="login-tab" id="tabReg" type="button" onclick="setAuthMode('reg')">Crear cuenta</button>
+      </div>
+      <form id="authForm" onsubmit="return submitAuth(event)" autocomplete="on">
+        <div class="field"><label>Correo</label><input name="email" type="email" required autocomplete="username" placeholder="usuario@correo.com"/></div>
+        <div class="field"><label>Contraseña</label><input name="password" type="password" required minlength="6" autocomplete="current-password" placeholder="Mínimo 6 caracteres"/></div>
+        <div class="field auth-reg-only" style="display:none"><label>Código de registro</label><input name="codigo" type="text" autocomplete="off" placeholder="Código proporcionado por el comando"/></div>
+        <div id="authError" class="auth-error" style="display:none"></div>
+        <button type="submit" class="btn" id="authSubmit" style="width:100%;justify-content:center;margin-top:6px">Iniciar sesión</button>
+      </form>
+      <p class="login-note">Acceso restringido al personal autorizado de POLIMARA.</p>
+    </div>
+  </div>
+
   <!-- Firebase (SDK compat: expone el objeto global `firebase`) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
@@ -567,7 +678,11 @@
     messagingSenderId: "89248498850",
     appId: "1:89248498850:web:167d1269f26572ea4183fb"
   };
-  let fs = null, cloud = false;
+  let fs = null, auth = null, cloud = false, currentUser = null, authMode = 'login';
+
+  // Código de registro: se exige para CREAR CUENTA (solo personal autorizado).
+  // Cámbielo por el que defina el comando.
+  const REG_CODE = 'POLIMARA-2026';
 
   /* Datos institucionales para el acta */
   const INST = {
@@ -615,22 +730,25 @@
 
   function setSync(state){
     const el = document.getElementById('syncStatus'); if(!el) return;
+    el.style.display = 'inline-flex';
     const map = {
-      nube:  ['#1e6b46','Sincronizado','M20 6 9 17l-5-5'],
-      local: ['#b45309','Sin conexión · guardado local','M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z'],
-      guardando:['#6b7994','Guardando…','M21 12a9 9 0 1 1-6.22-8.56']
+      nube:  ['online','#1e6b46','En línea','M12 20h.01M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 14 0M2 9.4a15 15 0 0 1 20 0'],
+      guardando:['sync','#12409e','Guardando…','M21 12a9 9 0 1 1-6.22-8.56'],
+      local: ['off','#b45309','Reconectando…','M2 9.4a15 15 0 0 1 4.5-3M22 9.4a15 15 0 0 0-4.5-3M8.5 16.4a5 5 0 0 1 7 0M12 20h.01M1 1l22 22']
     };
     const m = map[state]||map.local;
-    el.style.color = m[0];
-    el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${m[2]}"/></svg><span>${m[1]}</span>`;
+    el.className = 'sync-status ' + m[0];
+    el.style.color = m[1];
+    el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${m[3]}"/></svg><span>${m[2]}</span>`;
   }
 
-  /* --- Firestore: base de datos principal con persistencia offline --- */
+  /* --- Firestore + Auth: base de datos principal con persistencia offline --- */
   function initCloud(){
     try{
       if(typeof firebase==='undefined' || !firebase.firestore) return false;
       firebase.initializeApp(firebaseConfig);
       fs = firebase.firestore();
+      if(firebase.auth) auth = firebase.auth();
       // Persistencia offline: cachea y ENCOLA las escrituras aunque no haya internet;
       // se sincronizan solas al reconectar. Sobrevive recargas del navegador.
       fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});
@@ -639,20 +757,40 @@
   }
 
   function startDB(){
-    DB = loadLocal();          // 1) carga inmediata desde el respaldo local
+    DB = loadLocal();          // carga inmediata desde el respaldo local
     renderAll();
-    if(initCloud()){
-      setSync('guardando');
-      fs.collection(COL).orderBy('createdAt','desc').onSnapshot(
-        snap=>{
-          DB = snap.docs.map(d=> Object.assign({id:d.id}, d.data()));
-          persistLocal();      // 2) espeja la nube al respaldo local en CADA actualización
-          renderAll();
-          setSync(snap.metadata.fromCache ? 'local' : 'nube');
-        },
-        err=>{ console.error(err); setSync('local'); toast('Trabajando sin conexión: los datos se guardan localmente y se sincronizarán al reconectar.','warn'); }
-      );
-    } else { setSync('local'); }
+    if(!initCloud()){ return; } // sin SDK (offline total): funciona en modo local
+    if(auth){
+      // fondo borroso hasta iniciar sesión
+      showLogin();
+      auth.onAuthStateChanged(user=>{
+        currentUser = user;
+        if(user){ hideLogin(); updateUserUI(user); subscribeCloud(); }
+        else { showLogin(); updateUserUI(null); }
+      });
+    } else {
+      subscribeCloud();
+    }
+  }
+
+  let onlineOnce = false, subscribed = false;
+  function subscribeCloud(){
+    if(subscribed) return; subscribed = true;
+    setSync('guardando'); onlineOnce = false;
+    fs.collection(COL).orderBy('createdAt','desc').onSnapshot(
+      { includeMetadataChanges:true },
+      snap=>{
+        DB = snap.docs.map(d=> Object.assign({id:d.id}, d.data()));
+        persistLocal();        // espeja la nube al respaldo local en CADA actualización
+        renderAll();
+        if(!snap.metadata.fromCache){ onlineOnce = true; setSync('nube'); }   // confirmado por el servidor = en línea
+        else if(!onlineOnce){ setSync('guardando'); }                          // aún cargando, no es "sin conexión"
+      },
+      err=>{ console.error('Firestore:', err); setSync('local');
+        toast('No se pudo conectar con la base de datos. Verifique que Firestore esté creado y las reglas publicadas.','warn'); }
+    );
+    // Si en 10s el servidor no respondió, recién ahí se marca sin conexión.
+    setTimeout(()=>{ if(!onlineOnce) setSync('local'); }, 10000);
   }
 
   /* Guarda/actualiza un registro: respaldo local inmediato + escritura en la nube */
@@ -667,8 +805,57 @@
       setSync('guardando');
       fs.collection(COL).doc(rec.id).set(rec)
         .then(()=> setSync('nube'))
-        .catch(e=>{ console.error(e); setSync('local'); toast('Guardado localmente; pendiente de sincronizar con la nube.','warn'); });
+        .catch(e=>{ console.error(e); setSync('local'); });
     }
+  }
+
+  /* ================= AUTENTICACIÓN ================= */
+  function showLogin(){ const g=document.getElementById('loginGate'); if(g) g.style.display='flex'; document.body.style.overflow='hidden'; }
+  function hideLogin(){ const g=document.getElementById('loginGate'); if(g) g.style.display='none'; document.body.style.overflow=''; }
+  function doLogout(){ if(auth) auth.signOut(); }
+  function updateUserUI(user){
+    const chip=document.getElementById('userChip'); if(!chip) return;
+    if(user){ chip.style.display='inline-flex'; document.getElementById('userEmail').textContent = user.email||'Sesión activa'; }
+    else { chip.style.display='none'; }
+  }
+  function setAuthMode(m){
+    authMode = m;
+    document.getElementById('tabLogin').classList.toggle('active', m==='login');
+    document.getElementById('tabReg').classList.toggle('active', m==='reg');
+    document.querySelectorAll('.auth-reg-only').forEach(el=> el.style.display = m==='reg'?'flex':'none');
+    document.getElementById('authSubmit').textContent = m==='reg'?'Crear cuenta':'Iniciar sesión';
+    authError('');
+  }
+  function authError(msg){ const e=document.getElementById('authError'); if(!e) return; if(!msg){ e.style.display='none'; return; } e.style.display='block'; e.textContent=msg; }
+  function mapAuthError(err){
+    const c=(err&&err.code)||'';
+    const m={
+      'auth/invalid-email':'Correo inválido.',
+      'auth/user-not-found':'No existe una cuenta con ese correo.',
+      'auth/wrong-password':'Contraseña incorrecta.',
+      'auth/invalid-credential':'Correo o contraseña incorrectos.',
+      'auth/email-already-in-use':'Ya existe una cuenta con ese correo. Inicie sesión.',
+      'auth/weak-password':'La contraseña debe tener al menos 6 caracteres.',
+      'auth/network-request-failed':'Sin conexión. Intente nuevamente.',
+      'auth/too-many-requests':'Demasiados intentos. Espere un momento.',
+      'auth/operation-not-allowed':'Active Correo/Contraseña en Firebase Authentication.'
+    };
+    return m[c] || 'No se pudo completar la operación. Intente de nuevo.';
+  }
+  function submitAuth(ev){
+    ev.preventDefault();
+    if(!auth){ authError('Sin conexión con el servicio de autenticación.'); return false; }
+    const f=ev.target; const email=(f.email.value||'').trim(); const pass=f.password.value;
+    const btn=document.getElementById('authSubmit'); btn.disabled=true;
+    const done=()=>{ btn.disabled=false; };
+    if(authMode==='reg'){
+      const code=(f.codigo.value||'').trim();
+      if(code!==REG_CODE){ authError('Código de registro inválido. Solicítelo al comando.'); done(); return false; }
+      auth.createUserWithEmailAndPassword(email,pass).then(done).catch(err=>{ authError(mapAuthError(err)); done(); });
+    } else {
+      auth.signInWithEmailAndPassword(email,pass).then(done).catch(err=>{ authError(mapAuthError(err)); done(); });
+    }
+    return false;
   }
 
   /* ================= HELPERS ================= */
@@ -696,15 +883,22 @@
   }
 
   /* ================= NAV ================= */
-  function switchTab(name){
+  function switchTab(name, scrollToTabs){
     document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
     document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
     if(name==='novedades') renderNovedades();
     if(name==='cortes') renderCortes();
+    if(name==='metricas') renderMetricas();
     if(name==='registro') setNow();
-    window.scrollTo({top:0,behavior:'smooth'});
+    // No se salta al hero. Solo si hace falta, acerca la barra de pestañas
+    // (por ejemplo al pulsar "Nuevo registro" desde la cabecera).
+    if(scrollToTabs){
+      const nav = document.querySelector('.tabs');
+      if(nav){ const y = nav.getBoundingClientRect().top + window.scrollY - 76;
+        if(window.scrollY > y || name==='registro') window.scrollTo({top:Math.max(0,y),behavior:'smooth'}); }
+    }
   }
-  function goTo(name){ switchTab(name); }
+  function goTo(name){ switchTab(name, true); }
 
   /* ================= STATS ================= */
   function animateCount(el, to, isMoney){
@@ -1119,6 +1313,76 @@
     window.print();
   }
 
+  /* ================= MÉTRICAS ================= */
+  function renderMetricas(){
+    const body = document.getElementById('metricasBody');
+    const empty = document.getElementById('emptyMetricas');
+    if(!DB.length){ empty.style.display='block'; body.innerHTML=''; return; }
+    empty.style.display='none';
+
+    const ret = DB.filter(v=>v.estado==='retenido').length;
+    const ent = DB.filter(v=>v.estado==='entregado').length;
+    const pagadas = DB.filter(v=>v.pago&&v.pago.pagado).length;
+    const pend = DB.length - pagadas;
+    const monto = DB.reduce((s,v)=> s + ((v.pago&&v.pago.pagado)?(Number(v.pago.monto)||0):0), 0);
+    const dias = new Set(); DB.forEach(v=> (v.novedades||[]).forEach(n=>{ const k=(n.ts||'').slice(0,10); if(k) dias.add(k); }));
+    const prom = dias.size ? (DB.length/dias.size) : DB.length;
+
+    const kpis = `<div class="mx-kpis">
+      ${mxKpi(DB.length,'Total procedimientos')}
+      ${mxKpi(ret,'Retenidos')}
+      ${mxKpi(ent,'Entregados')}
+      ${mxKpi(money(monto),'Recaudado')}
+      ${mxKpi(pend,'Multas pendientes')}
+      ${mxKpi(prom.toFixed(1),'Promedio por día')}
+    </div>`;
+
+    const tipos = mxGroup(v=> v.tipo||'Otro');
+    const maxTipo = Math.max(1, ...tipos.map(e=>e[1]));
+    const tipoBars = tipos.length ? tipos.map(([k,v])=> mxHbar(k, v, maxTipo, '', null)).join('') : '<p style="color:var(--muted);font-size:.85rem">Sin datos.</p>';
+    const multaBars = mxHbar('Pagadas', pagadas, DB.length, 'ok', DB.length) + mxHbar('Pendientes', pend, DB.length, 'warn', DB.length);
+
+    body.innerHTML = kpis + `<div class="mx-grid">
+      <div class="mx-card" style="grid-column:1/-1">
+        <h3>Movimiento por día · últimos 14 días</h3>
+        ${mxDailyChart()}
+        <div class="mx-legend"><span><i style="background:var(--blue)"></i>Entradas (retenciones)</span><span><i style="background:#8fa4cc"></i>Salidas (entregas)</span></div>
+      </div>
+      <div class="mx-card"><h3>Por tipo de vehículo</h3>${tipoBars}</div>
+      <div class="mx-card"><h3>Estado de multas</h3>${multaBars}</div>
+    </div>`;
+  }
+  function mxKpi(v,l){ return `<div class="mx-kpi"><b>${v}</b><span>${esc(l)}</span></div>`; }
+  function mxGroup(fn){ const m={}; DB.forEach(v=>{ const k=fn(v)||'Otro'; m[k]=(m[k]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
+  function mxHbar(label,val,scale,cls,pctOf){
+    const w = scale ? Math.round(val/scale*100) : 0;
+    const right = (pctOf!=null) ? (val+' · '+(pctOf? Math.round(val/pctOf*100):0)+'%') : String(val);
+    return `<div class="mx-hbar"><div class="mx-hbar-top"><span>${esc(label)}</span><b>${right}</b></div>`+
+           `<div class="mx-track"><div class="mx-fill ${cls||''}" style="width:${w}%"></div></div></div>`;
+  }
+  function mxDailyChart(){
+    const days=[]; const t=new Date();
+    for(let i=13;i>=0;i--){ const d=new Date(t); d.setDate(d.getDate()-i); days.push(d.toISOString().slice(0,10)); }
+    const map={}; DB.forEach(v=> (v.novedades||[]).forEach(n=>{ const k=(n.ts||'').slice(0,10); if(!k) return;
+      if(!map[k]) map[k]={e:0,s:0}; if(n.tipo==='entrada') map[k].e++; else if(n.tipo==='salida') map[k].s++; }));
+    const data = days.map(k=>({ k, e:(map[k]&&map[k].e)||0, s:(map[k]&&map[k].s)||0 }));
+    const max = Math.max(1, ...data.map(d=>Math.max(d.e,d.s)));
+    const W=680,H=200,padL=22,padB=22,padT=8;
+    const cw=(W-padL)/data.length, gw=cw*0.62, bw=gw/2, chartH=H-padB-padT;
+    let bars='';
+    data.forEach((d,i)=>{
+      const cx=padL + i*cw + (cw-gw)/2;
+      const he=chartH*(d.e/max), hs=chartH*(d.s/max);
+      bars += `<rect x="${cx.toFixed(1)}" y="${(padT+chartH-he).toFixed(1)}" width="${bw.toFixed(1)}" height="${he.toFixed(1)}" rx="2" fill="#12409e"/>`;
+      bars += `<rect x="${(cx+bw).toFixed(1)}" y="${(padT+chartH-hs).toFixed(1)}" width="${bw.toFixed(1)}" height="${hs.toFixed(1)}" rx="2" fill="#8fa4cc"/>`;
+      bars += `<text x="${(cx+gw/2).toFixed(1)}" y="${H-7}" text-anchor="middle" font-size="9" fill="#6b7994">${d.k.slice(8)}</text>`;
+    });
+    const grid = `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+chartH}" stroke="rgba(20,45,95,0.15)"/>`+
+      `<line x1="${padL}" y1="${padT+chartH}" x2="${W}" y2="${padT+chartH}" stroke="rgba(20,45,95,0.15)"/>`+
+      `<text x="0" y="${padT+7}" font-size="9" fill="#6b7994">${max}</text>`;
+    return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Movimiento por día">${grid}${bars}</svg>`;
+  }
+
   /* ================= CSV EXPORT ================= */
   function csvCell(s){ const t=(s??'').toString(); return '"'+t.replace(/"/g,'""')+'"'; }
   function exportCSV(){
@@ -1166,6 +1430,7 @@
   function renderAll(){ renderStats(); renderTable();
     if(document.getElementById('panel-novedades').classList.contains('active')) renderNovedades();
     if(document.getElementById('panel-cortes').classList.contains('active')) renderCortes();
+    if(document.getElementById('panel-metricas').classList.contains('active')) renderMetricas();
   }
 
   setNow();

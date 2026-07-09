@@ -1,37 +1,43 @@
-# POLIMARA · Base de datos (Firestore)
+# POLIMARA · Base de datos (Firestore) e inicio de sesión
 
-La aplicación usa **Cloud Firestore** (proyecto `polimaradvt`) como base de datos
-principal, con **respaldo local** en el navegador para no perder ningún dato.
+La aplicación usa **Cloud Firestore** (proyecto `polimaradvt`) como base de datos,
+con **inicio de sesión** (Firebase Authentication) y **respaldo local** para no
+perder ningún dato.
 
-## Cómo funciona el respaldo (sin pérdida de datos)
+## Puesta en marcha (una sola vez, en la consola de Firebase)
 
-1. **Cada cambio** (registro de entrada, pago, entrega) se guarda de inmediato en:
-   - el **respaldo local** del dispositivo (localStorage), y
-   - **Firestore** en la nube.
-2. Firestore tiene **persistencia offline** activada: si no hay internet, las
-   escrituras se **encolan** y se sincronizan solas al reconectar. La cola
-   sobrevive a recargas del navegador.
-3. En cada actualización proveniente de la nube, se vuelve a **espejar** al
-   respaldo local. Un indicador en la cabecera muestra el estado
-   (*Sincronizado* / *Sin conexión · guardado local*).
-4. **Ningún registro puede eliminarse** (las reglas prohíben el borrado); las
-   correcciones se hacen por actualización y quedan asentadas en las novedades.
-
-El registro se organiza por **día** (`dia`) y los **cortes diarios** resumen el
-movimiento de cada jornada.
-
-## Puesta en marcha (una sola vez)
-
-1. En [Firebase Console](https://console.firebase.google.com/) del proyecto
-   `polimaradvt`: **Firestore Database → Crear base de datos** (modo producción).
+1. **Firestore Database → Crear base de datos** (modo producción, ubicación más
+   cercana).
 2. **Firestore → Reglas**: pega el contenido de [`../firestore.rules`](../firestore.rules)
-   y pulsa **Publicar**. (O con CLI: `firebase deploy --only firestore:rules`.)
-3. Listo: la página `polimara/` empezará a leer y escribir en Firestore.
+   y pulsa **Publicar**.  (O con CLI: `firebase deploy --only firestore:rules`.)
+3. **Authentication → Sign-in method →** habilita **Correo/Contraseña**.
+4. Crea la **primera cuenta**: desde la app, pestaña **“Crear cuenta”**, usando el
+   **código de registro**; o en **Authentication → Users → Add user**.
 
-## Recomendado para la comandancia (seguridad)
+> Sin estos pasos, la app mostrará *“Reconectando…”* y trabajará solo con el
+> respaldo local hasta que Firestore y el inicio de sesión estén configurados.
 
-Las reglas actuales permiten leer/crear/actualizar sin inicio de sesión (pero no
-borrar). Para restringir el acceso solo al personal autorizado, conviene
-**habilitar Firebase Authentication** y usar la versión de reglas con
-`request.auth != null` incluida al final de `firestore.rules`. Se puede añadir
-una pantalla de inicio de sesión cuando se indique.
+## Inicio de sesión
+
+- Pantalla de acceso con **iniciar sesión** y **crear cuenta**.
+- **Crear cuenta requiere un código de registro** (solo el personal autorizado),
+  definido en `polimara/index.html`:
+
+  ```js
+  const REG_CODE = 'POLIMARA-2026';   // cámbielo por el que defina el comando
+  ```
+
+- El resto es correo + contraseña. La sesión queda recordada en el dispositivo.
+
+## Respaldo sin pérdida de datos
+
+1. **Cada cambio** se guarda de inmediato en el **respaldo local** (localStorage)
+   y en **Firestore**.
+2. Firestore tiene **persistencia offline**: si no hay internet, las escrituras se
+   **encolan** y se sincronizan al reconectar; la cola sobrevive a recargas.
+3. En cada actualización desde la nube se **espeja** al respaldo local.
+4. Un indicador en la cabecera muestra el estado: **En línea** / **Reconectando…**
+5. **Ningún registro puede eliminarse** (las reglas prohíben el borrado).
+
+El registro se organiza por **día** (`dia`) y los **cortes diarios** y las
+**métricas** resumen el movimiento de cada jornada.
