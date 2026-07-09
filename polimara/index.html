@@ -8,36 +8,27 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230f3a92'/%3E%3Ccircle cx='50' cy='50' r='35' fill='%23fff'/%3E%3Cpath d='M50 24 L73 33 V55 C73 69 62 76 50 81 C38 76 27 69 27 55 V33 Z' fill='%232a9d3f'/%3E%3Ccircle cx='59' cy='46' r='6' fill='%23ff9e2c'/%3E%3Crect x='27' y='60' width='46' height='14' fill='%232f7fd0'/%3E%3C/svg%3E" />
   <style>
     :root{
-      --bg-0:#f5f8fd; --bg-1:#eef4fb; --bg-2:#eef6f1;
-      --blue:#2563eb; --cyan:#1f9d43; --indigo:#1e40af; --sky:#2f6fe0;
-      --ok:#0f9d58; --warn:#d97706; --danger:#dc2626;
-      --ink:#12233f; --dim:#41547a; --muted:#71829f;
-      --glass:rgba(255,255,255,0.72);
-      --glass-2:rgba(255,255,255,0.5);
-      --brd:rgba(20,50,110,0.12);
-      --brd-2:rgba(20,50,110,0.20);
-      --shadow:0 16px 40px rgba(20,50,110,0.12);
+      --bg-0:#eef1f6;
+      --blue:#123a8f; --blue-d:#0e2d70; --cyan:#1e6b46; --indigo:#0f3a92; --sky:#123a8f;
+      --ok:#1e6b46; --warn:#b45309; --danger:#b02020;
+      --ink:#14203a; --dim:#3c4a66; --muted:#6b7994;
+      --glass:rgba(255,255,255,0.78);
+      --glass-2:rgba(255,255,255,0.55);
+      --brd:rgba(20,45,95,0.16);
+      --brd-2:rgba(20,45,95,0.24);
+      --shadow:0 8px 22px rgba(20,45,95,0.10);
       --font:"Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
-      --radius:18px;
+      --radius:10px;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{font-family:var(--font);color:var(--ink);background:var(--bg-0);min-height:100vh;overflow-x:hidden;line-height:1.5;}
 
     /* ---------- animated aurora background ---------- */
-    #bg{position:fixed;inset:0;z-index:0;
-      background:
-        radial-gradient(1200px 800px at 82% -6%, rgba(47,111,224,0.09), transparent 60%),
-        radial-gradient(1000px 820px at 6% 108%, rgba(31,157,67,0.08), transparent 58%),
-        linear-gradient(180deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));}
-    #bg::before,#bg::after{content:"";position:absolute;border-radius:50%;filter:blur(80px);opacity:.10;}
-    #bg::before{width:520px;height:520px;left:-120px;top:8%;background:radial-gradient(circle,var(--blue),transparent 65%);animation:float1 18s ease-in-out infinite;}
-    #bg::after{width:460px;height:460px;right:-100px;bottom:6%;background:radial-gradient(circle,var(--cyan),transparent 65%);animation:float2 22s ease-in-out infinite;}
-    @keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
-    @keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-40px)}}
-    .grid-lines{position:fixed;inset:0;z-index:0;opacity:.6;
-      background-image:linear-gradient(rgba(30,60,120,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,120,0.045) 1px,transparent 1px);
-      background-size:44px 44px;mask-image:radial-gradient(circle at 50% 20%,#000,transparent 80%);}
+    #bg{position:fixed;inset:0;z-index:0;background:var(--bg-0);}
+    .grid-lines{position:fixed;inset:0;z-index:0;
+      background-image:linear-gradient(rgba(20,45,95,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(20,45,95,0.04) 1px,transparent 1px);
+      background-size:44px 44px;}
 
     /* ---------- glass primitive ---------- */
     .glass{background:var(--glass);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
@@ -46,9 +37,9 @@
     /* ---------- header ---------- */
     header{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
       padding:14px clamp(14px,4vw,40px);
-      background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.80));
-      backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
-      border-bottom:1px solid rgba(20,50,110,0.10);box-shadow:0 6px 22px rgba(20,50,110,0.10);}
+      background:rgba(255,255,255,0.9);
+      backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+      border-bottom:3px solid var(--blue);box-shadow:0 4px 14px rgba(20,45,95,0.08);}
     /* header claro: texto y botones legibles sobre vidrio blanco */
     header .brand{color:#0d1f45;}
     header .brand .wm small{color:#5b6b8c;}
@@ -56,48 +47,64 @@
     header .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:rgba(255,255,255,0.9);}
     .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);}
     .shield{width:46px;height:46px;flex:0 0 auto;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.55));}
-    .brand-emblem{position:relative;display:inline-flex;width:46px;height:46px;flex:0 0 auto;}
-    .brand-emblem img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.5));}
-    .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;background:linear-gradient(100deg,var(--sky),var(--cyan),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .brand-banner{height:48px;width:auto;max-width:min(66vw,380px);object-fit:contain;display:block;}
+    .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;color:var(--blue);}
     .brand .wm small{display:block;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:2px;text-transform:uppercase;}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 
     /* ---------- buttons ---------- */
-    .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;font-weight:700;font-size:.9rem;letter-spacing:.3px;
-      color:#04122e;background:linear-gradient(135deg,var(--sky),var(--blue));padding:11px 20px;border-radius:999px;
-      box-shadow:0 8px 22px rgba(59,130,246,0.4);transition:transform .18s,box-shadow .18s,filter .18s;white-space:nowrap;}
-    .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(59,130,246,0.55);}
-    .btn:active{transform:translateY(0);}
+    .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid transparent;font-weight:700;font-size:.9rem;letter-spacing:.3px;
+      color:#fff;background:var(--blue);padding:10px 18px;border-radius:8px;
+      box-shadow:0 1px 2px rgba(20,45,95,0.16);transition:background .18s ease,box-shadow .18s ease,transform .12s ease,border-color .18s ease,color .18s ease;white-space:nowrap;}
+    .btn:hover{background:var(--blue-d);transform:translateY(-1px);box-shadow:0 4px 12px rgba(20,45,95,0.20);}
+    .btn:active{transform:translateY(0);box-shadow:inset 0 1px 3px rgba(0,0,0,0.18);}
+    .btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
     .btn.ghost{background:var(--glass);color:var(--ink);border:1px solid var(--brd-2);box-shadow:none;backdrop-filter:blur(10px);}
-    .btn.ghost:hover{border-color:var(--sky);color:var(--sky);}
-    .btn.ok{background:linear-gradient(135deg,#34d399,#059669);color:#04231a;box-shadow:0 8px 22px rgba(52,211,153,0.35);}
-    .btn.warn{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#3a2600;box-shadow:0 8px 22px rgba(251,191,36,0.35);}
-    .btn.danger{background:linear-gradient(135deg,#f87171,#ef4444);color:#360d0d;box-shadow:0 8px 22px rgba(248,113,113,0.35);}
+    .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:#fff;transform:translateY(-1px);box-shadow:0 3px 9px rgba(20,45,95,0.10);}
+    /* acentos reducidos: acciones principales en azul, secundarias con contorno neutro */
+    .btn.ok{background:var(--blue);color:#fff;border-color:transparent;}
+    .btn.ok:hover{background:var(--blue-d);}
+    .btn.warn{background:var(--glass);color:var(--ink);border:1px solid var(--brd-2);box-shadow:none;}
+    .btn.warn:hover{border-color:var(--blue);color:var(--blue);background:#fff;transform:translateY(-1px);box-shadow:0 3px 9px rgba(20,45,95,0.10);}
+    .btn.danger{background:#fff;color:var(--danger);border:1px solid rgba(176,32,32,0.35);box-shadow:none;}
+    .btn.danger:hover{background:rgba(176,32,32,0.06);}
     .btn.sm{padding:7px 14px;font-size:.8rem;}
     .btn.icon{padding:9px 12px;}
 
     main{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:26px clamp(14px,4vw,40px) 80px;}
 
     /* ---------- hero / intro ---------- */
-    .intro{padding:26px 26px 24px;margin-bottom:22px;position:relative;overflow:hidden;}
-    .intro h1{font-size:clamp(1.5rem,3.4vw,2.3rem);font-weight:900;letter-spacing:-.5px;line-height:1.1;}
-    .intro h1 span{background:linear-gradient(100deg,var(--sky),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
-    .intro p{color:var(--dim);max-width:760px;margin-top:10px;font-size:.98rem;}
+    .intro{padding:28px;margin-bottom:22px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.55fr .95fr;gap:28px;align-items:center;}
+    .intro-eyebrow{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+    .intro h1{font-size:clamp(1.4rem,3vw,2.05rem);font-weight:800;letter-spacing:-.3px;line-height:1.18;color:var(--ink);}
+    .intro p{color:var(--dim);max-width:640px;margin-top:12px;font-size:.96rem;}
     .legal{margin-top:14px;font-size:.78rem;color:var(--muted);border-left:2px solid var(--brd-2);padding-left:12px;line-height:1.5;}
+    .intro-logo{display:flex;justify-content:center;align-items:center;padding-left:26px;border-left:1px solid var(--brd);}
+    .intro-logo img{width:min(300px,100%);height:auto;}
+    @media (max-width:760px){ .intro{grid-template-columns:1fr;gap:20px;} .intro-logo{border-left:none;border-top:1px solid var(--brd);padding-left:0;padding-top:20px;} }
 
     /* ---------- stats ---------- */
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px;}
-    .stat{padding:18px 20px;position:relative;overflow:hidden;}
-    .stat .k{font-size:2.1rem;font-weight:900;line-height:1;}
+    .stat{padding:18px 20px;position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease;}
+    .stat:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(20,45,95,0.12);}
+    .stat .k{font-size:2.1rem;font-weight:800;line-height:1;color:var(--blue);font-variant-numeric:tabular-nums;}
     .stat .l{font-size:.78rem;color:var(--dim);margin-top:8px;text-transform:uppercase;letter-spacing:1px;}
-    .stat .ic{position:absolute;right:14px;top:14px;width:26px;height:26px;opacity:.5;}
-    .stat.b .k{color:var(--sky);} .stat.g .k{color:var(--ok);} .stat.w .k{color:var(--warn);} .stat.c .k{color:var(--cyan);}
+    .stat .ic{position:absolute;right:14px;top:14px;width:24px;height:24px;color:var(--muted);opacity:.4;}
+
+    /* ---------- animaciones profesionales de entrada ---------- */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    .intro{animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) both;}
+    .stats .stat{animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) both;}
+    .stats .stat:nth-child(1){animation-delay:.05s} .stats .stat:nth-child(2){animation-delay:.11s}
+    .stats .stat:nth-child(3){animation-delay:.17s} .stats .stat:nth-child(4){animation-delay:.23s}
+    .tabs{animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:.12s}
+    @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
 
     /* ---------- tabs ---------- */
     .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:8px;}
     .tab{cursor:pointer;border:none;background:transparent;color:var(--dim);font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:12px;transition:.18s;display:inline-flex;align-items:center;gap:8px;}
     .tab:hover{color:var(--ink);background:var(--glass-2);}
-    .tab.active{color:#04122e;background:linear-gradient(135deg,var(--sky),var(--blue));box-shadow:0 6px 18px rgba(59,130,246,0.4);}
+    .tab.active{color:#fff;background:var(--blue);box-shadow:none;}
     .tab .dot{background:var(--danger);color:#fff;border-radius:999px;font-size:.68rem;padding:1px 7px;font-weight:800;}
 
     .panel{display:none;animation:fade .35s ease;}
@@ -119,7 +126,7 @@
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--sky);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
     select option{background:#fff;color:var(--ink);}
     textarea{resize:vertical;min-height:80px;}
-    .fieldset-title{grid-column:1/-1;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:800;margin-top:6px;display:flex;align-items:center;gap:10px;}
+    .fieldset-title{grid-column:1/-1;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--blue);font-weight:800;margin-top:6px;display:flex;align-items:center;gap:10px;}
     .fieldset-title::after{content:"";flex:1;height:1px;background:var(--brd);}
     .form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap;}
 
@@ -130,33 +137,62 @@
     .toolbar .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);}
 
     /* ---------- table ---------- */
-    .table-wrap{overflow-x:auto;border-radius:var(--radius);}
-    table{width:100%;border-collapse:collapse;min-width:820px;}
+    .table-wrap{border-radius:var(--radius);}
+    table{width:100%;border-collapse:collapse;min-width:0;}
     thead th{text-align:left;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:14px 14px;border-bottom:1px solid var(--brd);position:sticky;top:0;background:rgba(248,251,255,0.9);backdrop-filter:blur(8px);}
     tbody td{padding:13px 14px;border-bottom:1px solid rgba(20,50,110,0.08);font-size:.88rem;vertical-align:middle;}
-    tbody tr{transition:background .15s;}
+    tbody tr{transition:background .15s;cursor:pointer;}
+    .col-action{text-align:right;white-space:nowrap;}
+    .col-action .btn{gap:4px;}
+    /* En pantallas estrechas la tabla se convierte en tarjetas: sin scroll horizontal */
+    @media (max-width:760px){
+      table, thead, tbody, tr, td{display:block;width:100%;}
+      thead{position:absolute;left:-9999px;}
+      tbody tr{margin-bottom:12px;border:1px solid var(--brd);border-radius:10px;padding:6px 14px;background:rgba(255,255,255,0.5);}
+      tbody td{display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:right;border-bottom:1px solid rgba(20,50,110,0.06);padding:9px 0;}
+      tbody td:last-child{border-bottom:none;}
+      tbody td::before{content:attr(data-label);font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;text-align:left;}
+      .col-action{justify-content:flex-end;}
+      .col-action::before{display:none;}
+      .col-action .btn{width:100%;justify-content:center;}
+    }
     tbody tr:hover{background:rgba(37,99,235,0.05);}
     .plate{font-weight:800;letter-spacing:1px;font-family:"Consolas",monospace;color:var(--sky);}
     .cell-sub{font-size:.76rem;color:var(--muted);}
     .row-actions{display:flex;gap:6px;flex-wrap:wrap;}
-    .badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;padding:4px 11px;border-radius:999px;letter-spacing:.4px;}
-    .badge.ret{background:rgba(251,191,36,0.16);color:var(--warn);border:1px solid rgba(251,191,36,0.35);}
-    .badge.ent{background:rgba(52,211,153,0.16);color:var(--ok);border:1px solid rgba(52,211,153,0.35);}
-    .badge.pay{background:rgba(52,211,153,0.14);color:var(--ok);}
-    .badge.nopay{background:rgba(248,113,113,0.14);color:var(--danger);}
+    .badge{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:6px;letter-spacing:.3px;
+      background:rgba(20,45,95,0.05);color:var(--dim);border:1px solid var(--brd);}
+    .badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dot,#9aa6bd);flex:0 0 auto;}
+    .badge.ret{--dot:var(--warn);}
+    .badge.ent{--dot:var(--ok);}
+    .badge.pay{--dot:var(--ok);}
+    .badge.nopay{--dot:var(--danger);}
     .empty{text-align:center;padding:60px 20px;color:var(--muted);}
     .empty svg{width:54px;height:54px;opacity:.4;margin-bottom:14px;}
 
     /* ---------- novedades ---------- */
     .timeline{position:relative;padding-left:26px;}
-    .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--sky),transparent);}
+    .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--brd-2);}
     .tl-item{position:relative;padding:0 0 20px 6px;}
-    .tl-item::before{content:"";position:absolute;left:-24px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--bg-1);border:2px solid var(--sky);box-shadow:0 0 0 4px rgba(59,130,246,0.18);}
-    .tl-item.exit::before{border-color:var(--ok);box-shadow:0 0 0 4px rgba(52,211,153,0.18);}
-    .tl-item.pay::before{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,0.18);}
+    .tl-item::before{content:"";position:absolute;left:-24px;top:4px;width:13px;height:13px;border-radius:50%;background:#fff;border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(18,58,143,0.14);}
+    .tl-item.exit::before{border-color:var(--ok);box-shadow:0 0 0 3px rgba(30,107,70,0.14);}
+    .tl-item.pay::before{border-color:var(--warn);box-shadow:0 0 0 3px rgba(180,83,9,0.14);}
     .tl-time{font-size:.74rem;color:var(--muted);font-family:"Consolas",monospace;}
     .tl-title{font-weight:700;font-size:.92rem;margin:2px 0;}
     .tl-desc{font-size:.84rem;color:var(--dim);}
+
+    /* ---------- cortes diarios ---------- */
+    .corte{border:1px solid var(--brd);border-radius:12px;padding:16px 18px;margin-bottom:14px;background:rgba(255,255,255,0.5);backdrop-filter:blur(8px);transition:box-shadow .2s ease,transform .2s ease;animation:fadeUp .45s cubic-bezier(.2,.7,.2,1) both;}
+    .corte:hover{box-shadow:0 10px 26px rgba(20,45,95,0.10);transform:translateY(-2px);}
+    .corte-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+    .corte-day{font-weight:800;font-size:1rem;text-transform:capitalize;}
+    .corte-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin:14px 0 4px;}
+    .metric{border:1px solid var(--brd);border-radius:9px;padding:10px 12px;background:rgba(255,255,255,0.45);}
+    .metric b{display:block;font-size:1.4rem;color:var(--blue);font-variant-numeric:tabular-nums;line-height:1;margin-bottom:5px;}
+    .metric span{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+    .corte-detalle{margin-top:12px;border-top:1px solid var(--brd);padding-top:10px;}
+    .corte-line{display:flex;gap:10px;font-size:.82rem;padding:4px 0;color:var(--dim);}
+    .corte-line .t{font-family:"Consolas",monospace;color:var(--muted);flex:0 0 auto;}
 
     /* ---------- modal ---------- */
     .overlay{position:fixed;inset:0;z-index:200;background:rgba(15,30,60,0.42);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
@@ -167,8 +203,22 @@
     .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;}
     .modal-head h3{font-size:1.2rem;font-weight:800;}
     .modal-head p{color:var(--muted);font-size:.83rem;margin-top:3px;}
-    .x{cursor:pointer;background:var(--glass);border:1px solid var(--brd);color:var(--ink);width:34px;height:34px;border-radius:10px;font-size:1.1rem;display:grid;place-items:center;transition:.15s;flex:0 0 auto;}
-    .x:hover{background:rgba(248,113,113,0.2);border-color:var(--danger);}
+    .x{cursor:pointer;background:var(--glass);border:1px solid var(--brd);color:var(--ink);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;transition:.15s;flex:0 0 auto;}
+    .x:hover{background:rgba(176,32,32,0.12);border-color:var(--danger);color:var(--danger);}
+
+    /* ---------- panel lateral (drawer) glassmorfismo ---------- */
+    .drawer-overlay{align-items:stretch;justify-content:flex-end;padding:0;}
+    .drawer{width:min(440px,100%);height:100%;display:flex;flex-direction:column;
+      background:rgba(255,255,255,0.68);backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);
+      border-left:1px solid var(--brd-2);box-shadow:-24px 0 60px rgba(20,45,95,0.22);animation:slideIn .34s cubic-bezier(.2,.8,.2,1);}
+    @keyframes slideIn{from{transform:translateX(100%)}to{transform:none}}
+    .drawer-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:20px 22px;border-bottom:1px solid var(--brd);}
+    .drawer-head h3{font-size:1.1rem;font-weight:800;}
+    .drawer-head p{color:var(--muted);font-size:.82rem;margin-top:3px;}
+    .drawer-body{flex:1;overflow-y:auto;padding:18px 22px;}
+    .drawer-actions{padding:16px 22px;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,0.35);}
+    .drawer-actions .btn{width:100%;justify-content:center;}
+    @media (max-width:520px){ .drawer{width:100%;} }
 
     /* signature pad */
     .sig-wrap{position:relative;}
@@ -217,44 +267,8 @@
 
   <header>
     <a class="brand" href="#" onclick="return false">
-      <span class="brand-emblem">
-      <img src="logo.png" alt="Escudo POLIMARA" onload="this.nextElementSibling.style.display='none'" onerror="this.remove()"/>
-      <svg class="shield" viewBox="0 0 200 200" aria-label="Escudo POLIMARA - Policía del Municipio Mara">
-        <defs>
-          <path id="pmArcTop" d="M20 100 A80 80 0 0 1 180 100" fill="none"/>
-          <path id="pmArcBot" d="M20 100 A80 80 0 0 0 180 100" fill="none"/>
-          <linearGradient id="pmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eef8ff"/></linearGradient>
-          <clipPath id="pmShieldClip"><path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z"/></clipPath>
-        </defs>
-        <!-- anillo azul con borde blanco -->
-        <circle cx="100" cy="100" r="98" fill="#0f3a92"/>
-        <circle cx="100" cy="100" r="95" fill="#ffffff"/>
-        <circle cx="100" cy="100" r="92" fill="#12409e"/>
-        <circle cx="100" cy="100" r="67" fill="#ffffff"/>
-        <!-- texto del anillo -->
-        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="18" letter-spacing="3"><textPath href="#pmArcTop" startOffset="50%" text-anchor="middle">POLICIA</textPath></text>
-        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="12" letter-spacing="1"><textPath href="#pmArcBot" startOffset="50%" text-anchor="middle">MUNICIPIO · MARA</textPath></text>
-        <!-- escudo verde -->
-        <path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z" fill="#2a9d3f" stroke="#17662a" stroke-width="2.5"/>
-        <g clip-path="url(#pmShieldClip)">
-          <rect x="56" y="54" width="88" height="72" fill="url(#pmSky)"/>
-          <circle cx="120" cy="92" r="12" fill="#ff9e2c"/>
-          <path d="M56 106 L78 84 L94 100 L116 82 L144 108 V128 H56 Z" fill="#6cae54"/>
-          <path d="M56 96 L70 84 L82 96 Z" fill="#8a5a34"/>
-          <rect x="56" y="118" width="88" height="24" fill="#2f7fd0"/>
-          <path d="M56 118 h88 v3.5 h-88 z" fill="#8ec3ee"/>
-          <path d="M74 118 q-3 -20 -8 -30" stroke="#6b4a2b" stroke-width="3.5" fill="none"/>
-          <g fill="#1f7a34">
-            <path d="M66 88 q-14 -7 -20 1 q11 -3 20 5z"/>
-            <path d="M66 88 q14 -7 20 1 q-11 -3 -20 5z"/>
-            <path d="M66 88 q-7 -14 -2 -22 q5 9 2 22z"/>
-            <path d="M66 88 q9 -11 18 -10 q-9 4 -18 13z"/>
-          </g>
-          <path d="M98 130 h18 l-4 7 h-10 z" fill="#d94a3a"/>
-        </g>
-      </svg>
-      </span>
-      <span class="wm"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
+      <img class="brand-banner" src="logo.png" alt="POLIMARA · Instituto Autónomo de Policía del Municipio Mara" onerror="this.remove();var f=document.getElementById('brandFallback');if(f)f.style.display='flex'"/>
+      <span class="wm" id="brandFallback" style="display:none"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
     </a>
     <div class="top-actions">
       <button class="btn ghost sm" onclick="exportCSV()" title="Descargar todos los registros en CSV">
@@ -270,20 +284,26 @@
 
   <main>
     <section class="glass intro">
-      <h1>Gestión de <span>entrada, salida y entrega</span> de vehículos retenidos</h1>
-      <p>Plataforma para el control de motocicletas y vehículos que quedan retenidos en el comando. Registra la entrada, lleva el libro de novedades, asienta el pago de la multa y genera el acta policial de entrega con la firma de quien retira.</p>
-      <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y la firma de la persona que retira; el libro de novedades registra la entrada y salida.</p>
+      <div class="intro-text">
+        <div class="intro-eyebrow">Sistema institucional de control vehicular</div>
+        <h1>Control de entrada, salida y entrega de vehículos retenidos</h1>
+        <p>Plataforma para la administración de las motocicletas y vehículos que permanecen retenidos en el comando: registro de entrada, libro de novedades, asiento del pago de la multa y emisión del acta policial de entrega con la firma de quien retira.</p>
+        <p class="legal">Cada trámite genera un acta policial conforme a la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía. El acta deja constancia de las características del vehículo y de la firma de la persona que retira; el libro de novedades registra la entrada y la salida.</p>
+      </div>
+      <div class="intro-logo">
+        <img src="logo.png" alt="POLIMARA · Instituto Autónomo de Policía del Municipio Mara" onerror="this.closest('.intro-logo').style.display='none'"/>
+      </div>
     </section>
 
     <section class="stats">
-      <div class="glass stat w"><div class="k" id="stRet">0</div><div class="l">Retenidos actualmente</div>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2"><rect x="3" y="11" width="18" height="7" rx="2"/><path d="M5 11l2-5h10l2 5M7 18v2M17 18v2"/></svg></div>
-      <div class="glass stat g"><div class="k" id="stEnt">0</div><div class="l">Entregados</div>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
-      <div class="glass stat b"><div class="k" id="stTot">0</div><div class="l">Total procedimientos</div>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M4 4h16v16H4zM4 9h16M9 4v16"/></svg></div>
-      <div class="glass stat c"><div class="k" id="stPay">$0</div><div class="l">Multas recaudadas</div>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div class="glass stat"><div class="k" id="stRet">0</div><div class="l">Retenidos actualmente</div>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="7" rx="2"/><path d="M5 11l2-5h10l2 5M7 18v2M17 18v2"/></svg></div>
+      <div class="glass stat"><div class="k" id="stEnt">0</div><div class="l">Entregados</div>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <div class="glass stat"><div class="k" id="stTot">0</div><div class="l">Total procedimientos</div>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM4 9h16M9 4v16"/></svg></div>
+      <div class="glass stat"><div class="k" id="stPay">$0</div><div class="l">Multas recaudadas</div>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
     </section>
 
     <nav class="glass tabs">
@@ -293,6 +313,8 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Registrar entrada</button>
       <button class="tab" data-tab="novedades" onclick="switchTab('novedades')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>Libro de novedades</button>
+      <button class="tab" data-tab="cortes" onclick="switchTab('cortes')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>Cortes diarios</button>
     </nav>
 
     <!-- ============ GESTIÓN ============ -->
@@ -317,7 +339,7 @@
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th>Vehículo</th><th>Ingreso</th><th>Conductor</th><th>Motivo</th><th>Multa</th><th>Estado</th><th>Acciones</th>
+              <th>Vehículo</th><th>Ingreso</th><th>Conductor</th><th>Multa</th><th>Estado</th><th></th>
             </tr></thead>
             <tbody id="tbody"></tbody>
           </table>
@@ -332,7 +354,7 @@
     <!-- ============ REGISTRO ============ -->
     <section class="panel" id="panel-registro">
       <form class="glass card" id="formRegistro" onsubmit="return saveRegistro(event)">
-        <h2>📝 Registrar entrada de vehículo retenido</h2>
+        <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M12 11v6M9 14h6"/></svg>Registrar entrada de vehículo retenido</h2>
         <p class="sub">Asiente todas las características del vehículo. Al guardar se abre automáticamente el asiento de entrada en el libro de novedades.</p>
         <div class="form-grid">
           <div class="fieldset-title">Datos del procedimiento</div>
@@ -403,7 +425,7 @@
     <!-- ============ NOVEDADES ============ -->
     <section class="panel" id="panel-novedades">
       <div class="glass card">
-        <h2>📖 Libro de novedades</h2>
+        <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M9 7h7M9 11h7"/></svg>Libro de novedades</h2>
         <p class="sub">Registro cronológico de entradas, salidas, pagos y entregas de los vehículos. Este libro también se incluye en la exportación a CSV.</p>
         <div class="toolbar">
           <div class="search">
@@ -418,6 +440,19 @@
         </div>
       </div>
     </section>
+
+    <!-- ============ CORTES DIARIOS ============ -->
+    <section class="panel" id="panel-cortes">
+      <div class="glass card">
+        <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>Cortes diarios</h2>
+        <p class="sub">Resumen del movimiento por día: retenciones, entregas, pagos y monto recaudado. Se va acumulando automáticamente con cada registro y puede imprimirse en formato A4 para la administración del comando.</p>
+        <div id="cortesList"></div>
+        <div class="empty" id="emptyCortes" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+          <div>Aún no hay movimientos para generar cortes.</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -429,7 +464,7 @@
   <div class="overlay" id="ovPago">
     <form class="glass modal" id="formPago" onsubmit="return savePago(event)">
       <div class="modal-head">
-        <div><h3>💵 Registrar pago de multa</h3><p id="payMeta"></p></div>
+        <div><h3 style="display:flex;align-items:center;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>Registrar pago de multa</h3><p id="payMeta"></p></div>
         <div class="x" onclick="closeModal('ovPago')">✕</div>
       </div>
       <div class="form-grid">
@@ -460,10 +495,13 @@
   <div class="overlay" id="ovEntrega">
     <form class="glass modal wide" id="formEntrega" onsubmit="return saveEntrega(event)">
       <div class="modal-head">
-        <div><h3>🚦 Entrega de vehículo · Acta policial</h3><p id="entMeta"></p></div>
+        <div><h3 style="display:flex;align-items:center;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><path d="m9 14 2 2 4-4"/></svg>Entrega de vehículo · Acta policial</h3><p id="entMeta"></p></div>
         <div class="x" onclick="closeModal('ovEntrega')">✕</div>
       </div>
-      <div id="entWarn" style="display:none;margin-bottom:16px;padding:12px 14px;border-radius:12px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);color:var(--warn);font-size:.85rem;font-weight:600;"></div>
+      <div id="entWarn" style="display:none;margin-bottom:16px;padding:12px 14px;border-radius:8px;background:rgba(180,83,9,0.08);border:1px solid rgba(180,83,9,0.30);color:var(--warn);font-size:.85rem;font-weight:600;align-items:center;gap:10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <span id="entWarnText"></span>
+      </div>
       <div class="form-grid">
         <div class="fieldset-title">Persona que retira el vehículo</div>
         <div class="field"><label>Nombre y apellido <span class="req">*</span></label><input name="retiraNombre" required placeholder="Nombre completo" /></div>
@@ -500,18 +538,15 @@
   </div>
 
   <!-- ============ MODAL: DETALLE / ACTA VIEW ============ -->
-  <div class="overlay" id="ovDetalle">
-    <div class="glass modal wide">
-      <div class="modal-head">
+  <div class="overlay drawer-overlay" id="ovDetalle">
+    <aside class="drawer">
+      <div class="drawer-head">
         <div><h3 id="detTitle">Detalle</h3><p id="detMeta"></p></div>
-        <div class="x" onclick="closeModal('ovDetalle')">✕</div>
+        <button class="x" onclick="closeModal('ovDetalle')" aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
-      <div id="detBody"></div>
-      <div class="form-actions">
-        <button type="button" class="btn ghost" onclick="closeModal('ovDetalle')">Cerrar</button>
-        <button type="button" class="btn" id="detActaBtn" onclick="printActa()">🖨️ Imprimir acta</button>
-      </div>
-    </div>
+      <div class="drawer-body" id="detBody"></div>
+      <div class="drawer-actions" id="detActions"></div>
+    </aside>
   </div>
 
   <div id="actaPrint"></div>
@@ -596,20 +631,31 @@
     document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
     document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
     if(name==='novedades') renderNovedades();
+    if(name==='cortes') renderCortes();
     if(name==='registro') setNow();
     window.scrollTo({top:0,behavior:'smooth'});
   }
   function goTo(name){ switchTab(name); }
 
   /* ================= STATS ================= */
+  function animateCount(el, to, isMoney){
+    if(!el) return;
+    const from = parseFloat(el.dataset.val||'0')||0; el.dataset.val = to;
+    if(from===to){ el.textContent = isMoney? money(to) : String(to); return; }
+    const dur=600, t0=performance.now();
+    (function step(t){ const p=Math.min(1,(t-t0)/dur); const e=1-Math.pow(1-p,3); const val=from+(to-from)*e;
+      el.textContent = isMoney? money(val) : String(Math.round(val));
+      if(p<1) requestAnimationFrame(step); else el.textContent = isMoney? money(to) : String(to);
+    })(t0);
+  }
   function renderStats(){
     const ret = DB.filter(v=>v.estado==='retenido').length;
     const ent = DB.filter(v=>v.estado==='entregado').length;
     const pay = DB.reduce((s,v)=> s + (v.pago && v.pago.pagado ? (Number(v.pago.monto)||0) : 0), 0);
-    document.getElementById('stRet').textContent = ret;
-    document.getElementById('stEnt').textContent = ent;
-    document.getElementById('stTot').textContent = DB.length;
-    document.getElementById('stPay').textContent = money(pay);
+    animateCount(document.getElementById('stRet'), ret);
+    animateCount(document.getElementById('stEnt'), ent);
+    animateCount(document.getElementById('stTot'), DB.length);
+    animateCount(document.getElementById('stPay'), pay, true);
   }
 
   /* ================= REGISTRO ================= */
@@ -674,18 +720,13 @@
     tb.innerHTML = rows.map(v=>{
       const paid = v.pago && v.pago.pagado;
       const veh = `${esc(v.tipo)} ${esc(v.marca)} ${esc(v.modelo)}`.trim();
-      return `<tr>
-        <td><div class="plate">${esc(v.placa||'S/PLACA')}</div><div class="cell-sub">${veh||'—'} · ${esc(v.color||'')}</div><div class="cell-sub">${esc(v.numeroProcedimiento)}</div></td>
-        <td>${fmtDate(v.fechaEntrada)}<div class="cell-sub">${esc(v.funcionarioReceptor||'')}</div></td>
-        <td>${esc(v.conductorNombre)}<div class="cell-sub">${esc(v.conductorCedula)}</div></td>
-        <td style="max-width:180px">${esc(v.motivoRetencion)}</td>
-        <td>${paid?`<span class="badge pay">${money(v.pago.monto)}</span><div class="cell-sub">${esc(v.pago.metodo)} · ${esc(v.pago.referencia)}</div>`:`<span class="badge nopay">Pendiente</span>`}</td>
-        <td>${v.estado==='retenido'?'<span class="badge ret">Retenido</span>':'<span class="badge ent">Entregado</span>'}</td>
-        <td><div class="row-actions">
-          <button class="btn ghost sm" onclick="openDetalle('${v.id}')">Ver</button>
-          ${!paid?`<button class="btn warn sm" onclick="openPago('${v.id}')">Pago</button>`:''}
-          ${v.estado==='retenido'?`<button class="btn ok sm" onclick="openEntrega('${v.id}')">Entregar</button>`:`<button class="btn ghost sm" onclick="openDetalle('${v.id}',true)">Acta</button>`}
-        </div></td>
+      return `<tr onclick="openDetalle('${v.id}')">
+        <td data-label="Vehículo"><div class="plate">${esc(v.placa||'S/PLACA')}</div><div class="cell-sub">${veh||'—'}${v.color?(' · '+esc(v.color)):''}</div><div class="cell-sub">${esc(v.numeroProcedimiento)}</div></td>
+        <td data-label="Ingreso">${fmtDate(v.fechaEntrada)}<div class="cell-sub">${esc(v.funcionarioReceptor||'')}</div></td>
+        <td data-label="Conductor">${esc(v.conductorNombre)}<div class="cell-sub">${esc(v.conductorCedula)}</div></td>
+        <td data-label="Multa">${paid?`<span class="badge pay">${money(v.pago.monto)}</span>`:`<span class="badge nopay">Pendiente</span>`}</td>
+        <td data-label="Estado">${v.estado==='retenido'?'<span class="badge ret">Retenido</span>':'<span class="badge ent">Entregado</span>'}</td>
+        <td class="col-action"><button class="btn sm" onclick="event.stopPropagation();openDetalle('${v.id}')">Gestionar<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></td>
       </tr>`;
     }).join('');
   }
@@ -706,6 +747,7 @@
     v.novedades.push({ ts:d.fechaPago, tipo:'pago', titulo:'Pago de multa registrado',
       desc:`Cancela ${money(d.monto)} vía ${d.metodo}. Ref/N° pago: ${d.referencia.trim()}.` });
     persist(); renderAll(); closeModal('ovPago');
+    if(document.getElementById('ovDetalle').classList.contains('show')) openDetalle(currentId);
     toast('Pago de multa registrado', 'ok');
     return false;
   }
@@ -721,8 +763,8 @@
     document.getElementById('entMeta').textContent = `${v.tipo} ${v.placa||'S/PLACA'} · Exp. ${v.numeroProcedimiento}`;
     const warn = document.getElementById('entWarn');
     if(!(v.pago && v.pago.pagado)){
-      warn.style.display='block';
-      warn.textContent = '⚠ Este vehículo tiene la multa PENDIENTE de pago. Puedes registrar la entrega igualmente, pero quedará asentado en el acta y las novedades.';
+      warn.style.display='flex';
+      document.getElementById('entWarnText').textContent = 'Este vehículo tiene la multa PENDIENTE de pago. Puede registrar la entrega igualmente, pero quedará asentado en el acta y en las novedades.';
     } else warn.style.display='none';
     openModal('ovEntrega');
     setTimeout(initSig, 60);
@@ -800,7 +842,13 @@
       ${v.entrega.firma?`<div style="margin-top:12px"><span class="dl" style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Firma de conformidad</span><br/><img src="${v.entrega.firma}" style="background:#fff;border-radius:10px;max-width:280px;margin-top:6px;padding:6px"/></div>`:''}`;
     }
     document.getElementById('detBody').innerHTML = html;
-    document.getElementById('detActaBtn').style.display = v.entrega ? 'inline-flex' : 'none';
+    // acciones del panel lateral segun estado
+    let acts = '';
+    if(!paid) acts += `<button class="btn warn" onclick="openPago('${v.id}')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>Registrar pago de multa</button>`;
+    if(v.estado==='retenido') acts += `<button class="btn" onclick="openEntrega('${v.id}')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><path d="m9 14 2 2 4-4"/></svg>Entregar y generar acta</button>`;
+    if(v.entrega) acts += `<button class="btn" onclick="printActa()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>Imprimir acta</button>`;
+    acts += `<button class="btn ghost" onclick="closeModal('ovDetalle')">Cerrar</button>`;
+    document.getElementById('detActions').innerHTML = acts;
     openModal('ovDetalle');
   }
 
@@ -832,19 +880,26 @@
       ? `canceló la multa correspondiente por un monto de <b>${money(v.pago.monto)}</b>, mediante <b>${esc(v.pago.metodo)}</b>, según referencia / N° de pago <b>${esc(v.pago.referencia)}</b> de fecha ${fmtDate(v.pago.fecha)}`
       : `<b>NO</b> ha cancelado la multa correspondiente al presente procedimiento, quedando pendiente dicha obligación`;
     const prop = v.propietarioNombre ? `El vehículo figura a nombre del ciudadano(a) <b>${esc(v.propietarioNombre)}</b>${v.propietarioCedula?(', C.I. <b>'+esc(v.propietarioCedula)+'</b>')+'.':'.'} ` : '';
+    // Membrete: usa el logo horizontal oficial; si no existe, arma el encabezado con el escudo SVG
+    const letterhead = LOGO_OK
+      ? `<div style="text-align:center;margin-bottom:2px">
+           <div style="font-size:9.5pt;letter-spacing:.5px">${INST.pais}</div>
+           <img src="logo.png" alt="POLIMARA - Instituto Autónomo de Policía del Municipio Mara" style="max-width:72%;height:auto;margin:5px auto 2px"/>
+           ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
+         </div>`
+      : `<table style="width:100%;border-collapse:collapse"><tr>
+           <td style="width:92px;vertical-align:middle">${logoMarkup(82)}</td>
+           <td style="text-align:center;vertical-align:middle;line-height:1.35">
+             <div style="font-size:9.5pt">${INST.pais}</div>
+             <div style="font-weight:bold;font-size:12.5pt;letter-spacing:.5px">${INST.nombre}</div>
+             <div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div>
+             <div style="font-size:9pt">${INST.rif}</div>
+             ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
+           </td>
+           <td style="width:92px"></td>
+         </tr></table>`;
     document.getElementById('actaPrint').innerHTML = `
-      <!-- MEMBRETE -->
-      <table style="width:100%;border-collapse:collapse"><tr>
-        <td style="width:92px;vertical-align:middle">${logoMarkup(82)}</td>
-        <td style="text-align:center;vertical-align:middle;line-height:1.35">
-          <div style="font-size:9.5pt">${INST.pais}</div>
-          <div style="font-weight:bold;font-size:12.5pt;letter-spacing:.5px">${INST.nombre}</div>
-          <div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div>
-          <div style="font-size:9pt">${INST.rif}</div>
-          ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
-        </td>
-        <td style="width:92px"></td>
-      </tr></table>
+      ${letterhead}
       <hr style="border:none;border-top:2px solid #12409e;margin:8px 0 4px"/>
       <hr style="border:none;border-top:1px solid #12409e;margin:0 0 16px"/>
 
@@ -903,6 +958,98 @@
     }).join('');
   }
 
+  /* ================= CORTES DIARIOS ================= */
+  function fmtDayLong(key){
+    const d = new Date(key+'T00:00:00');
+    if(isNaN(d)) return key;
+    const s = d.toLocaleDateString('es-VE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    return s.charAt(0).toUpperCase()+s.slice(1);
+  }
+  function buildCortes(){
+    // agrupa las novedades por dia (fecha local del asiento)
+    const days = {};
+    DB.forEach(v=> (v.novedades||[]).forEach(n=>{
+      const key = (n.ts||'').slice(0,10); if(!key) return;
+      (days[key] = days[key] || []).push({...n, v});
+    }));
+    return Object.keys(days).sort((a,b)=> b.localeCompare(a)).map(key=>{
+      const items = days[key].sort((a,b)=> new Date(a.ts)-new Date(b.ts));
+      const entradas = items.filter(n=>n.tipo==='entrada').length;
+      const salidas  = items.filter(n=>n.tipo==='salida').length;
+      const pagos    = items.filter(n=>n.tipo==='pago');
+      const monto    = pagos.reduce((s,n)=> s + (Number(n.v.pago&&n.v.pago.monto)||0), 0);
+      return { key, items, entradas, salidas, pagos:pagos.length, monto };
+    });
+  }
+  function renderCortes(){
+    const cortes = buildCortes();
+    document.getElementById('emptyCortes').style.display = cortes.length ? 'none' : 'block';
+    document.getElementById('cortesList').innerHTML = cortes.map(c=>`
+      <div class="corte">
+        <div class="corte-head">
+          <div class="corte-day">${fmtDayLong(c.key)}</div>
+          <button class="btn ghost sm" onclick="printCorte('${c.key}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>Imprimir corte</button>
+        </div>
+        <div class="corte-metrics">
+          <div class="metric"><b>${c.entradas}</b><span>Retenciones (entradas)</span></div>
+          <div class="metric"><b>${c.salidas}</b><span>Entregas (salidas)</span></div>
+          <div class="metric"><b>${c.pagos}</b><span>Pagos de multa</span></div>
+          <div class="metric"><b>${money(c.monto)}</b><span>Monto recaudado</span></div>
+        </div>
+        <div class="corte-detalle">
+          ${c.items.map(n=>`<div class="corte-line"><span class="t">${fmtDate(n.ts).split(', ')[1]||''}</span><span>${esc(n.titulo)} — ${esc(n.v.placa||'S/PLACA')} · ${esc(n.desc)}</span></div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+  function printCorte(key){
+    const c = buildCortes().find(x=>x.key===key); if(!c) return;
+    const rows = c.items.map(n=>`<tr>
+      <td style="padding:4px 8px;border:1px solid #444;white-space:nowrap">${fmtDate(n.ts).split(', ')[1]||''}</td>
+      <td style="padding:4px 8px;border:1px solid #444">${esc(n.titulo)}</td>
+      <td style="padding:4px 8px;border:1px solid #444">${esc(n.v.placa||'S/PLACA')}</td>
+      <td style="padding:4px 8px;border:1px solid #444">${esc(n.desc)}</td>
+    </tr>`).join('');
+    const letterhead = LOGO_OK
+      ? `<div style="text-align:center;margin-bottom:2px"><div style="font-size:9.5pt;letter-spacing:.5px">${INST.pais}</div><img src="logo.png" alt="POLIMARA" style="max-width:66%;height:auto;margin:5px auto 2px"/></div>`
+      : `<div style="text-align:center"><div style="font-size:9.5pt">${INST.pais}</div><div style="font-weight:bold;font-size:12.5pt">${INST.nombre}</div><div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div><div style="font-size:9pt">${INST.rif}</div></div>`;
+    document.getElementById('actaPrint').innerHTML = `
+      ${letterhead}
+      <hr style="border:none;border-top:2px solid #12409e;margin:8px 0 4px"/>
+      <hr style="border:none;border-top:1px solid #12409e;margin:0 0 16px"/>
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-weight:bold;font-size:13pt;letter-spacing:1px;text-decoration:underline">CORTE DIARIO DE NOVEDADES</div>
+        <div style="font-size:10.5pt;margin-top:5px;text-transform:capitalize"><b>${fmtDayLong(c.key)}</b></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:14px">
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #444;background:#f2f5fa;font-weight:bold">Retenciones (entradas)</td><td style="padding:6px 10px;border:1px solid #444;text-align:center">${c.entradas}</td>
+          <td style="padding:6px 10px;border:1px solid #444;background:#f2f5fa;font-weight:bold">Entregas (salidas)</td><td style="padding:6px 10px;border:1px solid #444;text-align:center">${c.salidas}</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #444;background:#f2f5fa;font-weight:bold">Pagos de multa</td><td style="padding:6px 10px;border:1px solid #444;text-align:center">${c.pagos}</td>
+          <td style="padding:6px 10px;border:1px solid #444;background:#f2f5fa;font-weight:bold">Monto recaudado</td><td style="padding:6px 10px;border:1px solid #444;text-align:center">${money(c.monto)}</td>
+        </tr>
+      </table>
+      <p style="margin:6px 0 5px;font-weight:bold">RELACIÓN CRONOLÓGICA:</p>
+      <table style="width:100%;border-collapse:collapse;font-size:9.5pt">
+        <thead><tr>
+          <th style="padding:5px 8px;border:1px solid #444;background:#12409e;color:#fff;text-align:left">Hora</th>
+          <th style="padding:5px 8px;border:1px solid #444;background:#12409e;color:#fff;text-align:left">Novedad</th>
+          <th style="padding:5px 8px;border:1px solid #444;background:#12409e;color:#fff;text-align:left">Vehículo</th>
+          <th style="padding:5px 8px;border:1px solid #444;background:#12409e;color:#fff;text-align:left">Descripción</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <table class="acta-sign" style="width:100%;margin-top:48px;text-align:center;font-size:10pt"><tr>
+        <td style="width:50%;padding:0 20px"><div style="height:44px"></div><div style="border-top:1px solid #000;padding-top:5px">Funcionario(a) de guardia</div></td>
+        <td style="width:50%;padding:0 20px"><div style="height:44px"></div><div style="border-top:1px solid #000;padding-top:5px">Supervisor(a) del servicio</div></td>
+      </tr></table>
+      <div style="margin-top:26px;border-top:1px solid #999;padding-top:6px;font-size:8pt;color:#555;text-align:center">
+        Instituto Autónomo de Policía del Municipio Mara (POLIMARA) · ${INST.rif} · Corte generado el ${fmtDate(new Date().toISOString())}
+      </div>`;
+    window.print();
+  }
+
   /* ================= CSV EXPORT ================= */
   function csvCell(s){ const t=(s??'').toString(); return '"'+t.replace(/"/g,'""')+'"'; }
   function exportCSV(){
@@ -947,7 +1094,10 @@
   });
 
   /* ================= INIT ================= */
-  function renderAll(){ renderStats(); renderTable(); if(document.getElementById('panel-novedades').classList.contains('active')) renderNovedades(); }
+  function renderAll(){ renderStats(); renderTable();
+    if(document.getElementById('panel-novedades').classList.contains('active')) renderNovedades();
+    if(document.getElementById('panel-cortes').classList.contains('active')) renderCortes();
+  }
 
   function seedIfEmpty(){
     if(DB.length) return;
