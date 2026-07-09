@@ -2,34 +2,34 @@ rules_version = '2';
 
 // ============================================================
 //  Reglas de seguridad de Firestore · POLIMARA
-//  Proyecto: polimaradvt
-//  Control de vehículos retenidos (comandancia)
+//  Proyecto: polimaradvt · Control de vehículos retenidos
 // ============================================================
 //
 //  Cómo publicarlas:
-//   A) Consola web: Firebase Console → Firestore Database → pestaña
-//      "Reglas" → pega este contenido → "Publicar".
+//   A) Consola web: Firebase Console → Firestore Database → "Reglas"
+//      → pega este contenido → "Publicar".
 //   B) CLI:  firebase deploy --only firestore:rules
 //
-//  IMPORTANTE (protección de datos):
-//   - Se permite LEER, CREAR y ACTUALIZAR registros.
-//   - Se PROHÍBE BORRAR: ningún registro puede eliminarse desde la app,
-//     de modo que no se pierda ningún dato. Las correcciones se hacen
-//     por actualización (y quedan asentadas en el historial de novedades).
+//  Seguridad:
+//   - Solo el personal con SESIÓN INICIADA (Firebase Authentication)
+//     puede leer y registrar. Sin sesión no hay acceso a los datos.
+//   - Se PROHÍBE BORRAR: ningún registro puede eliminarse, para no
+//     perder datos. Las correcciones se hacen por actualización.
 //
-//  RECOMENDADO para producción en la comandancia:
-//   Restringir el acceso a usuarios autenticados. Más abajo se deja el
-//   bloque listo para activar Firebase Authentication (ver README).
+//  Requisitos en la consola (una sola vez):
+//   1) Firestore Database → Crear base de datos (modo producción).
+//   2) Authentication → Sign-in method → habilitar "Correo/Contraseña".
+//   3) Crear la primera cuenta desde la propia app (pestaña "Crear
+//      cuenta" + código de registro) o en Authentication → Users.
 // ============================================================
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ---- Colección de vehículos retenidos ----
+    // ---- Vehículos retenidos ----
     match /vehiculos/{id} {
-      allow read:           if true;
-      allow create, update: if true;
-      allow delete:         if false;   // no se puede eliminar ningún registro
+      allow read, create, update: if request.auth != null;  // requiere sesión
+      allow delete:               if false;                 // nunca se elimina
     }
 
     // ---- Todo lo demás: denegado ----
@@ -38,15 +38,3 @@ service cloud.firestore {
     }
   }
 }
-
-// ------------------------------------------------------------
-//  VERSIÓN RECOMENDADA (con inicio de sesión)
-//  Cuando se habilite Firebase Authentication, reemplazar el bloque
-//  de /vehiculos por este, para que solo el personal autorizado
-//  con sesión iniciada pueda leer y registrar:
-//
-//    match /vehiculos/{id} {
-//      allow read, create, update: if request.auth != null;
-//      allow delete:               if false;
-//    }
-// ------------------------------------------------------------
