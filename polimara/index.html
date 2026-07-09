@@ -47,8 +47,14 @@
     /* ---------- header ---------- */
     header{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
       padding:14px clamp(14px,4vw,40px);
-      background:linear-gradient(180deg,rgba(7,11,26,0.82),rgba(7,11,26,0.35));
-      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--brd);}
+      background:linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.60));
+      backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+      border-bottom:1px solid rgba(255,255,255,0.75);box-shadow:0 8px 30px rgba(3,16,43,0.18);}
+    /* header claro: texto y botones legibles sobre vidrio blanco */
+    header .brand{color:#0d1f45;}
+    header .brand .wm small{color:#5b6b8c;}
+    header .btn.ghost{color:#123a6b;background:rgba(255,255,255,0.6);border:1px solid rgba(30,60,120,0.22);}
+    header .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:rgba(255,255,255,0.9);}
     .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);}
     .shield{width:46px;height:46px;flex:0 0 auto;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.55));}
     .brand-emblem{position:relative;display:inline-flex;width:46px;height:46px;flex:0 0 auto;}
