@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>POLIMARA · Control de Vehículos Retenidos</title>
   <meta name="description" content="Sistema de control, gestión, entrada, salida y entrega de vehículos retenidos en el comando policial. Registro de actas policiales, novedades y pago de multas." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6 82 20v26c0 22-14 34-32 42C32 80 18 68 18 46V20z' fill='%233b82f6'/%3E%3Cpath d='M38 50l8 8 18-20' fill='none' stroke='%23fff' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230f3a92'/%3E%3Ccircle cx='50' cy='50' r='35' fill='%23fff'/%3E%3Cpath d='M50 24 L73 33 V55 C73 69 62 76 50 81 C38 76 27 69 27 55 V33 Z' fill='%232a9d3f'/%3E%3Ccircle cx='59' cy='46' r='6' fill='%23ff9e2c'/%3E%3Crect x='27' y='60' width='46' height='14' fill='%232f7fd0'/%3E%3C/svg%3E" />
   <style>
     :root{
-      --bg-0:#070b1a; --bg-1:#0b1230; --bg-2:#0a1a3a;
-      --blue:#3b82f6; --cyan:#22d3ee; --indigo:#6366f1; --sky:#38bdf8;
+      --bg-0:#04102b; --bg-1:#071a3e; --bg-2:#062a2e;
+      --blue:#2f6fe0; --cyan:#33c14e; --indigo:#1e4bb8; --sky:#4f9bff;
       --ok:#34d399; --warn:#fbbf24; --danger:#f87171;
       --ink:#eaf2ff; --dim:#a9b8d8; --muted:#7c8bb0;
       --glass:rgba(255,255,255,0.07);
@@ -27,9 +27,9 @@
     /* ---------- animated aurora background ---------- */
     #bg{position:fixed;inset:0;z-index:0;
       background:
-        radial-gradient(1200px 800px at 82% -6%, rgba(59,130,246,0.35), transparent 60%),
-        radial-gradient(1000px 820px at 6% 108%, rgba(34,211,238,0.20), transparent 58%),
-        radial-gradient(900px 900px at 50% 46%, rgba(99,102,241,0.14), transparent 70%),
+        radial-gradient(1200px 800px at 82% -6%, rgba(47,111,224,0.35), transparent 60%),
+        radial-gradient(1000px 820px at 6% 108%, rgba(51,193,78,0.22), transparent 58%),
+        radial-gradient(900px 900px at 50% 46%, rgba(30,75,184,0.16), transparent 70%),
         linear-gradient(180deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));}
     #bg::before,#bg::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;}
     #bg::before{width:520px;height:520px;left:-120px;top:8%;background:radial-gradient(circle,var(--blue),transparent 65%);animation:float1 18s ease-in-out infinite;}
@@ -50,7 +50,9 @@
       background:linear-gradient(180deg,rgba(7,11,26,0.82),rgba(7,11,26,0.35));
       backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--brd);}
     .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);}
-    .shield{width:46px;height:46px;flex:0 0 auto;filter:drop-shadow(0 6px 16px rgba(59,130,246,0.55));}
+    .shield{width:46px;height:46px;flex:0 0 auto;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.55));}
+    .brand-emblem{position:relative;display:inline-flex;width:46px;height:46px;flex:0 0 auto;}
+    .brand-emblem img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(47,111,224,0.5));}
     .brand .wm b{display:block;font-weight:900;letter-spacing:3px;font-size:1.3rem;background:linear-gradient(100deg,var(--sky),var(--cyan),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent;}
     .brand .wm small{display:block;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:2px;text-transform:uppercase;}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
@@ -188,10 +190,14 @@
 
     /* ---------- ACTA (print) ---------- */
     #actaPrint{display:none;}
+    @page{ size:A4; margin:16mm 15mm; }
     @media print{
+      html,body{background:#fff !important;}
       body *{visibility:hidden;}
       #actaPrint,#actaPrint *{visibility:visible;}
-      #actaPrint{display:block;position:absolute;left:0;top:0;width:100%;background:#fff;color:#000;padding:40px 48px;font-size:12pt;}
+      #actaPrint{display:block;position:absolute;left:0;top:0;width:100%;background:#fff;color:#000;
+        font-family:"Times New Roman",Georgia,serif;font-size:11.5pt;line-height:1.55;}
+      #actaPrint .acta-sign{page-break-inside:avoid;}
     }
 
     @media (max-width:640px){
@@ -206,12 +212,44 @@
 
   <header>
     <a class="brand" href="#" onclick="return false">
-      <svg class="shield" viewBox="0 0 100 100" aria-hidden="true">
-        <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
-        <path d="M50 6 82 20v26c0 22-14 34-32 42C32 80 18 68 18 46V20z" fill="url(#sg)"/>
-        <path d="M38 50l8 8 18-20" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <span class="brand-emblem">
+      <img src="logo.png" alt="Escudo POLIMARA" onload="this.nextElementSibling.style.display='none'" onerror="this.remove()"/>
+      <svg class="shield" viewBox="0 0 200 200" aria-label="Escudo POLIMARA - Policía del Municipio Mara">
+        <defs>
+          <path id="pmArcTop" d="M20 100 A80 80 0 0 1 180 100" fill="none"/>
+          <path id="pmArcBot" d="M20 100 A80 80 0 0 0 180 100" fill="none"/>
+          <linearGradient id="pmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eef8ff"/></linearGradient>
+          <clipPath id="pmShieldClip"><path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z"/></clipPath>
+        </defs>
+        <!-- anillo azul con borde blanco -->
+        <circle cx="100" cy="100" r="98" fill="#0f3a92"/>
+        <circle cx="100" cy="100" r="95" fill="#ffffff"/>
+        <circle cx="100" cy="100" r="92" fill="#12409e"/>
+        <circle cx="100" cy="100" r="67" fill="#ffffff"/>
+        <!-- texto del anillo -->
+        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="18" letter-spacing="3"><textPath href="#pmArcTop" startOffset="50%" text-anchor="middle">POLICIA</textPath></text>
+        <text font-family="Arial, sans-serif" font-weight="700" fill="#ffffff" font-size="12" letter-spacing="1"><textPath href="#pmArcBot" startOffset="50%" text-anchor="middle">MUNICIPIO · MARA</textPath></text>
+        <!-- escudo verde -->
+        <path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z" fill="#2a9d3f" stroke="#17662a" stroke-width="2.5"/>
+        <g clip-path="url(#pmShieldClip)">
+          <rect x="56" y="54" width="88" height="72" fill="url(#pmSky)"/>
+          <circle cx="120" cy="92" r="12" fill="#ff9e2c"/>
+          <path d="M56 106 L78 84 L94 100 L116 82 L144 108 V128 H56 Z" fill="#6cae54"/>
+          <path d="M56 96 L70 84 L82 96 Z" fill="#8a5a34"/>
+          <rect x="56" y="118" width="88" height="24" fill="#2f7fd0"/>
+          <path d="M56 118 h88 v3.5 h-88 z" fill="#8ec3ee"/>
+          <path d="M74 118 q-3 -20 -8 -30" stroke="#6b4a2b" stroke-width="3.5" fill="none"/>
+          <g fill="#1f7a34">
+            <path d="M66 88 q-14 -7 -20 1 q11 -3 20 5z"/>
+            <path d="M66 88 q14 -7 20 1 q-11 -3 -20 5z"/>
+            <path d="M66 88 q-7 -14 -2 -22 q5 9 2 22z"/>
+            <path d="M66 88 q9 -11 18 -10 q-9 4 -18 13z"/>
+          </g>
+          <path d="M98 130 h18 l-4 7 h-10 z" fill="#d94a3a"/>
+        </g>
       </svg>
-      <span class="wm"><b>POLIMARA</b><small>Control de Vehículos Retenidos</small></span>
+      </span>
+      <span class="wm"><b>POLIMARA</b><small>Instituto Autónomo de Policía · Municipio Mara</small></span>
     </a>
     <div class="top-actions">
       <button class="btn ghost sm" onclick="exportCSV()" title="Descargar todos los registros en CSV">
@@ -480,6 +518,44 @@
   let DB = load();
   let currentId = null; // for modals
 
+  /* Datos institucionales para el acta */
+  const INST = {
+    pais:'REPÚBLICA BOLIVARIANA DE VENEZUELA',
+    nombre:'INSTITUTO AUTÓNOMO DE POLICÍA DEL MUNICIPIO MARA',
+    siglas:'POLIMARA',
+    rif:'RIF: G-20008261-5'
+  };
+
+  /* Escudo POLIMARA en SVG (respaldo si no existe logo.png) */
+  const EMBLEM_SVG = `<svg viewBox="0 0 200 200" width="82" height="82" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <path id="pmA1" d="M20 100 A80 80 0 0 1 180 100" fill="none"/>
+      <path id="pmA2" d="M20 100 A80 80 0 0 0 180 100" fill="none"/>
+      <linearGradient id="pmS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eef8ff"/></linearGradient>
+      <clipPath id="pmC"><path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z"/></clipPath>
+    </defs>
+    <circle cx="100" cy="100" r="98" fill="#0f3a92"/><circle cx="100" cy="100" r="95" fill="#fff"/>
+    <circle cx="100" cy="100" r="92" fill="#12409e"/><circle cx="100" cy="100" r="67" fill="#fff"/>
+    <text font-family="Arial" font-weight="700" fill="#fff" font-size="18" letter-spacing="3"><textPath href="#pmA1" startOffset="50%" text-anchor="middle">POLICIA</textPath></text>
+    <text font-family="Arial" font-weight="700" fill="#fff" font-size="12"><textPath href="#pmA2" startOffset="50%" text-anchor="middle">MUNICIPIO · MARA</textPath></text>
+    <path d="M100 56 L142 70 V108 C142 132 122 146 100 156 C78 146 58 132 58 108 V70 Z" fill="#2a9d3f" stroke="#17662a" stroke-width="2.5"/>
+    <g clip-path="url(#pmC)">
+      <rect x="56" y="54" width="88" height="72" fill="url(#pmS)"/><circle cx="120" cy="92" r="12" fill="#ff9e2c"/>
+      <path d="M56 106 L78 84 L94 100 L116 82 L144 108 V128 H56 Z" fill="#6cae54"/><path d="M56 96 L70 84 L82 96 Z" fill="#8a5a34"/>
+      <rect x="56" y="118" width="88" height="24" fill="#2f7fd0"/><path d="M56 118 h88 v3.5 h-88 z" fill="#8ec3ee"/>
+      <path d="M74 118 q-3 -20 -8 -30" stroke="#6b4a2b" stroke-width="3.5" fill="none"/>
+      <g fill="#1f7a34"><path d="M66 88 q-14 -7 -20 1 q11 -3 20 5z"/><path d="M66 88 q14 -7 20 1 q-11 -3 -20 5z"/><path d="M66 88 q-7 -14 -2 -22 q5 9 2 22z"/><path d="M66 88 q9 -11 18 -10 q-9 4 -18 13z"/></g>
+      <path d="M98 130 h18 l-4 7 h-10 z" fill="#d94a3a"/>
+    </g></svg>`;
+
+  /* Detecta si existe un logo real (logo.png) para usarlo en el acta */
+  let LOGO_OK = false;
+  (function(){ const im = new Image();
+    im.onload = ()=>{ LOGO_OK = true; };
+    im.onerror = ()=>{ LOGO_OK = false; };
+    im.src = 'logo.png';
+  })();
+
   function load(){
     try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){ return []; }
   }
@@ -723,7 +799,11 @@
     openModal('ovDetalle');
   }
 
-  /* ================= ACTA PRINT ================= */
+  /* ================= ACTA PRINT (A4) ================= */
+  function logoMarkup(px){
+    if(LOGO_OK) return `<img src="logo.png" alt="Escudo POLIMARA" style="width:${px}px;height:${px}px;object-fit:contain"/>`;
+    return EMBLEM_SVG.replace('width="82" height="82"', `width="${px}" height="${px}"`);
+  }
   function printActa(){
     const v = DB.find(x=>x.id===currentId); if(!v || !v.entrega) return;
     const e = v.entrega;
@@ -732,32 +812,67 @@
       ['Año', v.anio],['Color', v.color],['Serial de carrocería', v.serialCarroceria],
       ['Serial de motor', v.serialMotor],['Cilindraje', v.cilindraje]
     ].filter(x=>x[1]);
-    const carsRows = cars.map(c=>`<tr><td style="padding:4px 10px;border:1px solid #333;font-weight:bold;width:38%">${esc(c[0])}</td><td style="padding:4px 10px;border:1px solid #333">${esc(c[1])}</td></tr>`).join('');
+    // tabla de 2 columnas de pares para aprovechar el ancho A4
+    let carsRows = '';
+    for(let i=0;i<cars.length;i+=2){
+      const a=cars[i], b=cars[i+1];
+      carsRows += `<tr>
+        <td style="padding:5px 9px;border:1px solid #444;font-weight:bold;width:20%;background:#f2f5fa">${esc(a[0])}</td>
+        <td style="padding:5px 9px;border:1px solid #444;width:30%">${esc(a[1])}</td>
+        <td style="padding:5px 9px;border:1px solid #444;font-weight:bold;width:20%;background:#f2f5fa">${b?esc(b[0]):''}</td>
+        <td style="padding:5px 9px;border:1px solid #444;width:30%">${b?esc(b[1]):''}</td>
+      </tr>`;
+    }
     const pago = v.pago&&v.pago.pagado
-      ? `canceló la multa correspondiente por un monto de <b>${money(v.pago.monto)}</b>, mediante <b>${esc(v.pago.metodo)}</b>, según referencia/N° de pago <b>${esc(v.pago.referencia)}</b> de fecha ${fmtDate(v.pago.fecha)}`
+      ? `canceló la multa correspondiente por un monto de <b>${money(v.pago.monto)}</b>, mediante <b>${esc(v.pago.metodo)}</b>, según referencia / N° de pago <b>${esc(v.pago.referencia)}</b> de fecha ${fmtDate(v.pago.fecha)}`
       : `<b>NO</b> ha cancelado la multa correspondiente al presente procedimiento, quedando pendiente dicha obligación`;
+    const prop = v.propietarioNombre ? `El vehículo figura a nombre del ciudadano(a) <b>${esc(v.propietarioNombre)}</b>${v.propietarioCedula?(', C.I. <b>'+esc(v.propietarioCedula)+'</b>')+'.':'.'} ` : '';
     document.getElementById('actaPrint').innerHTML = `
-      <div style="text-align:center;margin-bottom:18px">
-        <div style="font-weight:bold;font-size:13pt;letter-spacing:2px">ACTA POLICIAL DE ENTREGA DE VEHÍCULO</div>
-        <div style="font-size:10pt;margin-top:4px">${esc(v.unidad||'Comando Policial')}</div>
-        <div style="font-size:10pt">${esc(e.actaNumero)} · Expediente ${esc(v.numeroProcedimiento)}</div>
+      <!-- MEMBRETE -->
+      <table style="width:100%;border-collapse:collapse"><tr>
+        <td style="width:92px;vertical-align:middle">${logoMarkup(82)}</td>
+        <td style="text-align:center;vertical-align:middle;line-height:1.35">
+          <div style="font-size:9.5pt">${INST.pais}</div>
+          <div style="font-weight:bold;font-size:12.5pt;letter-spacing:.5px">${INST.nombre}</div>
+          <div style="font-weight:bold;font-size:14pt;letter-spacing:3px;color:#12409e">${INST.siglas}</div>
+          <div style="font-size:9pt">${INST.rif}</div>
+          ${v.unidad?`<div style="font-size:9pt">${esc(v.unidad)}</div>`:''}
+        </td>
+        <td style="width:92px"></td>
+      </tr></table>
+      <hr style="border:none;border-top:2px solid #12409e;margin:8px 0 4px"/>
+      <hr style="border:none;border-top:1px solid #12409e;margin:0 0 16px"/>
+
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-weight:bold;font-size:13pt;letter-spacing:1px;text-decoration:underline">ACTA POLICIAL DE ENTREGA DE VEHÍCULO</div>
+        <div style="font-size:10pt;margin-top:5px"><b>${esc(e.actaNumero)}</b> &nbsp;·&nbsp; Expediente N° <b>${esc(v.numeroProcedimiento)}</b></div>
       </div>
-      <p style="text-align:justify;line-height:1.7">En la fecha <b>${fmtDate(e.fecha)}</b>, el funcionario <b>${esc(e.funcionarioEntrega)}</b>, actuando de conformidad con la Constitución de la República, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía y del Cuerpo de Policía, deja constancia de la <b>entrega</b> del vehículo que había quedado retenido en este comando en fecha ${fmtDate(v.fechaEntrada)}, según procedimiento por motivo de: <b>${esc(v.motivoRetencion)}</b>.</p>
-      <p style="margin:10px 0 4px;font-weight:bold">Características del vehículo:</p>
-      <table style="border-collapse:collapse;width:100%;font-size:10pt">${carsRows}</table>
-      ${v.caracteristicas?`<p style="margin-top:8px"><b>Observaciones del vehículo:</b> ${esc(v.caracteristicas)}</p>`:''}
-      <p style="text-align:justify;line-height:1.7;margin-top:12px">Se hace entrega del referido vehículo al ciudadano(a) <b>${esc(e.retiraNombre)}</b>, titular de la cédula de identidad <b>${esc(e.retiraCedula)}</b>, en su condición de <b>${esc(e.parentesco)}</b>, quien manifiesta recibirlo de conformidad y en el mismo estado. Se deja constancia de que el interesado ${pago}.</p>
-      ${e.obs?`<p style="text-align:justify;margin-top:8px"><b>Observaciones:</b> ${esc(e.obs)}</p>`:''}
-      <p style="margin-top:10px">Es todo. Se levanta la presente acta de conformidad con lo establecido en la ley, la cual firman los intervinientes.</p>
-      <div style="display:flex;justify-content:space-around;margin-top:60px;text-align:center;font-size:10pt">
-        <div>
-          ${e.firma?`<img src="${e.firma}" style="height:60px;display:block;margin:0 auto 4px"/>`:'<div style="height:60px"></div>'}
-          <div style="border-top:1px solid #000;padding-top:4px;width:200px">${esc(e.retiraNombre)}<br/>C.I. ${esc(e.retiraCedula)}<br/><small>Quien retira</small></div>
-        </div>
-        <div>
-          <div style="height:60px"></div>
-          <div style="border-top:1px solid #000;padding-top:4px;width:200px">${esc(e.funcionarioEntrega)}<br/><small>Funcionario actuante</small></div>
-        </div>
+
+      <p style="text-align:justify;margin-bottom:10px">En la ciudad correspondiente a la jurisdicción del Municipio Mara, siendo la fecha <b>${fmtDate(e.fecha)}</b>, quien suscribe, funcionario(a) <b>${esc(e.funcionarioEntrega)}</b>, adscrito(a) al Instituto Autónomo de Policía del Municipio Mara (POLIMARA), actuando de conformidad con lo establecido en la Constitución de la República Bolivariana de Venezuela, el Estatuto de la Función Policial y la Ley Orgánica del Servicio de Policía y del Cuerpo de Policía Nacional Bolivariana, deja constancia mediante la presente acta de la <b>ENTREGA</b> del vehículo que quedó retenido en esta institución en fecha <b>${fmtDate(v.fechaEntrada)}</b>, en el marco del procedimiento practicado por motivo de: <b>${esc(v.motivoRetencion)}</b>, recibido en su oportunidad por el funcionario <b>${esc(v.funcionarioReceptor||'—')}</b>.</p>
+
+      <p style="margin:6px 0 5px;font-weight:bold">DEL VEHÍCULO:</p>
+      <table style="border-collapse:collapse;width:100%;font-size:10pt;margin-bottom:6px">${carsRows}</table>
+      ${v.caracteristicas?`<p style="text-align:justify;margin-bottom:10px"><b>Características y observaciones:</b> ${esc(v.caracteristicas)}</p>`:'<div style="margin-bottom:6px"></div>'}
+
+      <p style="margin:6px 0 5px;font-weight:bold">DE LA ENTREGA:</p>
+      <p style="text-align:justify;margin-bottom:10px">${prop}Se hace entrega del referido vehículo al ciudadano(a) <b>${esc(e.retiraNombre)}</b>, titular de la cédula de identidad N° <b>${esc(e.retiraCedula)}</b>${e.retiraTelefono?(', teléfono '+esc(e.retiraTelefono)):''}, en su condición de <b>${esc(e.parentesco)}</b>, quien manifiesta recibir el vehículo de conformidad, en el mismo estado en que fue retenido y sin objeción alguna. Asimismo, se deja constancia de que el interesado ${pago}.</p>
+      ${e.obs?`<p style="text-align:justify;margin-bottom:10px"><b>Observaciones:</b> ${esc(e.obs)}</p>`:''}
+
+      <p style="text-align:justify;margin-bottom:10px">Es todo cuanto se tiene que hacer constar. Se levanta y se lee la presente acta de conformidad con lo previsto en la ley, y estando conformes con su contenido, firman los intervinientes.</p>
+
+      <table class="acta-sign" style="width:100%;margin-top:52px;text-align:center;font-size:10pt"><tr>
+        <td style="width:50%;padding:0 20px">
+          <div style="height:56px;display:flex;align-items:flex-end;justify-content:center">${e.firma?`<img src="${e.firma}" style="max-height:56px"/>`:''}</div>
+          <div style="border-top:1px solid #000;padding-top:5px;margin-top:2px"><b>${esc(e.retiraNombre)}</b><br/>C.I. ${esc(e.retiraCedula)}<br/><span style="font-size:9pt">QUIEN RETIRA (${esc(e.parentesco)})</span></div>
+        </td>
+        <td style="width:50%;padding:0 20px">
+          <div style="height:56px"></div>
+          <div style="border-top:1px solid #000;padding-top:5px;margin-top:2px"><b>${esc(e.funcionarioEntrega)}</b><br/>&nbsp;<br/><span style="font-size:9pt">FUNCIONARIO(A) ACTUANTE · POLIMARA</span></div>
+        </td>
+      </tr></table>
+
+      <div style="margin-top:30px;border-top:1px solid #999;padding-top:6px;font-size:8pt;color:#555;text-align:center">
+        Instituto Autónomo de Policía del Municipio Mara (POLIMARA) · ${INST.rif} · Documento generado el ${fmtDate(new Date().toISOString())}
       </div>`;
     window.print();
   }
