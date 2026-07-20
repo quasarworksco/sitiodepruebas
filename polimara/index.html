@@ -836,11 +836,13 @@
       'auth/invalid-credential':'Correo o contraseña incorrectos.',
       'auth/email-already-in-use':'Ya existe una cuenta con ese correo. Inicie sesión.',
       'auth/weak-password':'La contraseña debe tener al menos 6 caracteres.',
-      'auth/network-request-failed':'Sin conexión. Intente nuevamente.',
+      'auth/network-request-failed':'No hay conexión con el servicio. Verifique internet y que Authentication esté habilitado en Firebase.',
       'auth/too-many-requests':'Demasiados intentos. Espere un momento.',
-      'auth/operation-not-allowed':'Active Correo/Contraseña en Firebase Authentication.'
+      'auth/operation-not-allowed':'Active el método Correo/Contraseña en Firebase Authentication.',
+      'auth/configuration-not-found':'Authentication no está configurado. En Firebase: Authentication → Comenzar → habilite Correo/Contraseña.',
+      'auth/unauthorized-domain':'Dominio no autorizado. Agregue el dominio del sitio en Firebase → Authentication → Settings → Dominios autorizados.'
     };
-    return m[c] || 'No se pudo completar la operación. Intente de nuevo.';
+    return m[c] ? (m[c]+' ['+c+']') : ('No se pudo completar la operación ('+(c||'error')+').');
   }
   function submitAuth(ev){
     ev.preventDefault();
